@@ -81,6 +81,27 @@ class TestCreateAnimatedDiagram:
         assert_that(result, contains_string('M10,10 C20,20 40,20 50,10'))
         assert_that(result, contains_string('stroke="black"'))
 
+    def test_creates_path_from_segments(self):
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "path",
+                "segments": [
+                    {"type": "move_to", "x": 10, "y": 20},
+                    {"type": "line_to", "x": 50, "y": 20},
+                    {"type": "cubic_bezier", "x1": 60, "y1": 20, "x2": 70, "y2": 50, "x": 50, "y": 60},
+                    {"type": "close"},
+                ],
+                "stroke": "black",
+                "fill": "lightblue",
+            }]
+        })
+
+        assert_that(result, contains_string('<path'))
+        assert_that(result, contains_string('M10'))
+        assert_that(result, contains_string('L50'))
+        assert_that(result, contains_string('C60'))
+        assert_that(result, contains_string('Z'))
+
     def test_handles_empty_elements_list(self):
         result = create_animated_diagram({"elements": []})
 

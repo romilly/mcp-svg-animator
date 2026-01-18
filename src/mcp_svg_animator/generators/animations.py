@@ -96,18 +96,129 @@ class TextSpec(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+class MoveToSpec(BaseModel):
+    """Move to a point without drawing."""
+
+    type: Literal["move_to"] = "move_to"
+    x: float
+    y: float
+
+    def to_path_data(self) -> str:
+        return f"M{self.x},{self.y}"
+
+
+class LineToSpec(BaseModel):
+    """Draw a line to a point."""
+
+    type: Literal["line_to"] = "line_to"
+    x: float
+    y: float
+
+    def to_path_data(self) -> str:
+        return f"L{self.x},{self.y}"
+
+
+class CubicBezierSpec(BaseModel):
+    """Draw a cubic bezier curve."""
+
+    type: Literal["cubic_bezier"] = "cubic_bezier"
+    x1: float  # First control point
+    y1: float
+    x2: float  # Second control point
+    y2: float
+    x: float  # End point
+    y: float
+
+    def to_path_data(self) -> str:
+        return f"C{self.x1},{self.y1} {self.x2},{self.y2} {self.x},{self.y}"
+
+
+class QuadraticBezierSpec(BaseModel):
+    """Draw a quadratic bezier curve."""
+
+    type: Literal["quadratic_bezier"] = "quadratic_bezier"
+    x1: float  # Control point
+    y1: float
+    x: float  # End point
+    y: float
+
+    def to_path_data(self) -> str:
+        return f"Q{self.x1},{self.y1} {self.x},{self.y}"
+
+
+class ArcSpec(BaseModel):
+    """Draw an elliptical arc."""
+
+    type: Literal["arc"] = "arc"
+    rx: float  # X radius
+    ry: float  # Y radius
+    rotation: float = 0  # X-axis rotation in degrees
+    large_arc: bool = False  # Large arc flag
+    sweep: bool = True  # Sweep direction (True = clockwise)
+    x: float  # End point
+    y: float
+
+    def to_path_data(self) -> str:
+        large = 1 if self.large_arc else 0
+        sweep = 1 if self.sweep else 0
+        return f"A{self.rx},{self.ry} {self.rotation} {large} {sweep} {self.x},{self.y}"
+
+
+class CloseSpec(BaseModel):
+    """Close the path back to the start."""
+
+    type: Literal["close"] = "close"
+
+    def to_path_data(self) -> str:
+        return "Z"
+
+
+SegmentSpec = MoveToSpec | LineToSpec | CubicBezierSpec | QuadraticBezierSpec | ArcSpec | CloseSpec
+
+
+def _parse_segment(segment_dict: dict) -> SegmentSpec:
+    """Parse a segment dictionary into the appropriate spec."""
+    segment_type = segment_dict.get("type")
+    segment_classes: dict[str, type[SegmentSpec]] = {
+        "move_to": MoveToSpec,
+        "line_to": LineToSpec,
+        "cubic_bezier": CubicBezierSpec,
+        "quadratic_bezier": QuadraticBezierSpec,
+        "arc": ArcSpec,
+        "close": CloseSpec,
+    }
+    spec_class = segment_classes.get(segment_type)  # type: ignore[arg-type]
+    if spec_class is None:
+        raise ValueError(f"Unknown segment type: {segment_type}")
+    return spec_class.model_validate(segment_dict)
+
+
+def _segments_to_path_data(segments: list[dict]) -> str:
+    """Convert a list of segment specs to SVG path data."""
+    return " ".join(_parse_segment(seg).to_path_data() for seg in segments)
+
+
 class PathSpec(BaseModel):
     """Specification for a path element."""
 
     id: str | None = None
     type: Literal["path"] = "path"
-    d: str  # SVG path data
+    d: str | None = None  # SVG path data (raw)
+    segments: list[dict] = Field(default_factory=list)  # Segment-based path
     fill: str = "none"
     stroke: str = "black"
     stroke_width: float = Field(default=1, alias="stroke_width")
     animations: list[AnimationSpec] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
+
+    def get_path_data(self) -> str:
+        """Get the SVG path data, either from d or by converting segments."""
+        if self.d is not None:
+            return self.d
+        if self.segments:
+            return _segments_to_path_data(self.segments)
+        raise ValueError("PathSpec requires either 'd' or 'segments'")
 
 
 class GroupSpec(BaseModel):
@@ -197,7 +308,7 @@ def _create_text(spec: TextSpec):
 
 def _create_path(spec: PathSpec):
     return draw.Path(
-        d=spec.d,
+        d=spec.get_path_data(),
         fill=spec.fill,
         stroke=spec.stroke,
         stroke_width=spec.stroke_width,
