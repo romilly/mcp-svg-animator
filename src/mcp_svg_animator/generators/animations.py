@@ -1,8 +1,30 @@
 """Animated SVG diagram generator using drawsvg."""
 
+from dataclasses import dataclass
 from typing import cast
 
 import drawsvg as draw
+
+
+@dataclass
+class AnimationSpec:
+    """Specification for an SVG animation."""
+
+    attribute: str
+    dur: str
+    from_value: str | None = None
+    to_value: str | None = None
+    repeat_count: str | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "AnimationSpec":
+        return cls(
+            attribute=data["attribute"],
+            dur=data["dur"],
+            from_value=data.get("from_value"),
+            to_value=data.get("to_value"),
+            repeat_count=data.get("repeatCount"),
+        )
 
 
 def create_animated_diagram(arguments: dict) -> str:
@@ -84,15 +106,16 @@ _ELEMENT_CREATORS = {
 }
 
 
-def _apply_animations(element, animations: list):
+def _apply_animations(element, animations: list[dict]):
     """Apply animations to an SVG element."""
-    for anim_spec in animations:
+    for anim_dict in animations:
+        spec = AnimationSpec.from_dict(anim_dict)
         anim = draw.Animate(
-            anim_spec["attribute"],
-            anim_spec["dur"],
-            from_or_values=anim_spec.get("from_value"),
-            to=anim_spec.get("to_value"),
-            repeatCount=anim_spec.get("repeatCount"),
+            spec.attribute,
+            spec.dur,
+            from_or_values=spec.from_value,
+            to=spec.to_value,
+            repeatCount=spec.repeat_count,
         )
         element.append_anim(anim)
 
