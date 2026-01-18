@@ -84,6 +84,19 @@ _ELEMENT_CREATORS = {
 }
 
 
+def _apply_animations(element, animations: list):
+    """Apply animations to an SVG element."""
+    for anim_spec in animations:
+        anim = draw.Animate(
+            anim_spec["attribute"],
+            anim_spec["dur"],
+            from_or_values=anim_spec.get("from_value"),
+            to=anim_spec.get("to_value"),
+            repeatCount=anim_spec.get("repeatCount"),
+        )
+        element.append_anim(anim)
+
+
 def _create_element(spec: dict):
     """Create a single SVG element from a specification."""
     element_type = spec.get("type")
@@ -92,4 +105,8 @@ def _create_element(spec: dict):
     creator = _ELEMENT_CREATORS.get(element_type)
     if creator is None:
         raise ValueError(f"Unknown element type: {element_type}")
-    return creator(spec)
+    element = creator(spec)
+    animations = spec.get("animations", [])
+    if animations:
+        _apply_animations(element, animations)
+    return element

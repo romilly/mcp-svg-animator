@@ -91,3 +91,29 @@ class TestCreateAnimatedDiagram:
 
         assert_that(result, contains_string('<circle'))
         assert_that(result, contains_string('<rect'))
+
+    def test_creates_circle_with_animation(self):
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "circle",
+                "cx": 50,
+                "cy": 50,
+                "r": 20,
+                "fill": "blue",
+                "animations": [{
+                    "attribute": "cx",
+                    "from_value": "50",
+                    "to_value": "150",
+                    "dur": "2s",
+                    "repeatCount": "indefinite",
+                }]
+            }]
+        })
+
+        assert_that(result, contains_string('<circle'))
+        assert_that(result, contains_string('<animate'))
+        assert_that(result, contains_string('attributeName="cx"'))
+        assert_that(result, contains_string('from="50"'))
+        assert_that(result, contains_string('to="150"'))
+        assert_that(result, contains_string('dur="2s"'))
+        assert_that(result, contains_string('repeatCount="indefinite"'))
