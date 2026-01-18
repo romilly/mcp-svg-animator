@@ -1,9 +1,13 @@
 """Tests for the animations generator."""
 
 import pytest
-from hamcrest import assert_that, contains_string
+from hamcrest import assert_that, contains_string, equal_to
 
-from mcp_svg_animator.generators.animations import create_animated_diagram
+from mcp_svg_animator.generators.animations import (
+    CircleSpec,
+    RectangleSpec,
+    create_animated_diagram,
+)
 
 
 class TestCreateAnimatedDiagram:
@@ -117,3 +121,22 @@ class TestCreateAnimatedDiagram:
         assert_that(result, contains_string('to="150"'))
         assert_that(result, contains_string('dur="2s"'))
         assert_that(result, contains_string('repeatCount="indefinite"'))
+
+
+class TestElementSpecs:
+    """Tests for element spec models."""
+
+    def test_circle_spec_accepts_id(self):
+        spec = CircleSpec.model_validate({"type": "circle", "id": "my_circle"})
+
+        assert_that(spec.id, equal_to("my_circle"))
+
+    def test_rectangle_spec_accepts_id(self):
+        spec = RectangleSpec.model_validate({"type": "rectangle", "id": "my_rect"})
+
+        assert_that(spec.id, equal_to("my_rect"))
+
+    def test_element_id_defaults_to_none(self):
+        spec = CircleSpec.model_validate({"type": "circle"})
+
+        assert_that(spec.id, equal_to(None))

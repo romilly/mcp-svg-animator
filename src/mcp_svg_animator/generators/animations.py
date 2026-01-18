@@ -21,6 +21,7 @@ class AnimationSpec(BaseModel):
 class ElementSpec(BaseModel):
     """Base specification for SVG elements."""
 
+    id: str | None = None
     fill: str = "blue"
     stroke: str = "none"
     stroke_width: float = Field(default=0, alias="stroke_width")
@@ -51,6 +52,7 @@ class RectangleSpec(ElementSpec):
 class LineSpec(BaseModel):
     """Specification for a line element."""
 
+    id: str | None = None
     type: Literal["line"] = "line"
     x1: float = 0
     y1: float = 0
@@ -66,6 +68,7 @@ class LineSpec(BaseModel):
 class TextSpec(BaseModel):
     """Specification for a text element."""
 
+    id: str | None = None
     type: Literal["text"] = "text"
     content: str = ""
     font_size: float = 16
