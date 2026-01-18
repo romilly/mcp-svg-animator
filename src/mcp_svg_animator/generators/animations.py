@@ -1,6 +1,6 @@
 """Animated SVG diagram generator using drawsvg."""
 
-from typing import Literal, cast
+from typing import Annotated, Literal, cast
 
 import drawsvg as draw
 from pydantic import BaseModel, Field
@@ -173,29 +173,15 @@ class CloseSpec(BaseModel):
         return "Z"
 
 
-SegmentSpec = MoveToSpec | LineToSpec | CubicBezierSpec | QuadraticBezierSpec | ArcSpec | CloseSpec
+SegmentSpec = Annotated[
+    MoveToSpec | LineToSpec | CubicBezierSpec | QuadraticBezierSpec | ArcSpec | CloseSpec,
+    Field(discriminator="type"),
+]
 
 
-def _parse_segment(segment_dict: dict) -> SegmentSpec:
-    """Parse a segment dictionary into the appropriate spec."""
-    segment_type = segment_dict.get("type")
-    segment_classes: dict[str, type[SegmentSpec]] = {
-        "move_to": MoveToSpec,
-        "line_to": LineToSpec,
-        "cubic_bezier": CubicBezierSpec,
-        "quadratic_bezier": QuadraticBezierSpec,
-        "arc": ArcSpec,
-        "close": CloseSpec,
-    }
-    spec_class = segment_classes.get(segment_type)  # type: ignore[arg-type]
-    if spec_class is None:
-        raise ValueError(f"Unknown segment type: {segment_type}")
-    return spec_class.model_validate(segment_dict)
-
-
-def _segments_to_path_data(segments: list[dict]) -> str:
+def _segments_to_path_data(segments: list[SegmentSpec]) -> str:
     """Convert a list of segment specs to SVG path data."""
-    return " ".join(_parse_segment(seg).to_path_data() for seg in segments)
+    return " ".join(seg.to_path_data() for seg in segments)
 
 
 class PathSpec(BaseModel):
@@ -204,7 +190,7 @@ class PathSpec(BaseModel):
     id: str | None = None
     type: Literal["path"] = "path"
     d: str | None = None  # SVG path data (raw)
-    segments: list[dict] = Field(default_factory=list)  # Segment-based path
+    segments: list[SegmentSpec] = Field(default_factory=list)  # Segment-based path
     fill: str = "none"
     stroke: str = "black"
     stroke_width: float = Field(default=1, alias="stroke_width")
