@@ -67,6 +67,20 @@ class TestCreateAnimatedDiagram:
         assert_that(result, contains_string('<text'))
         assert_that(result, contains_string('Hello'))
 
+    def test_creates_path_element(self):
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "path",
+                "d": "M10,10 C20,20 40,20 50,10",
+                "stroke": "black",
+                "fill": "none",
+            }]
+        })
+
+        assert_that(result, contains_string('<path'))
+        assert_that(result, contains_string('M10,10 C20,20 40,20 50,10'))
+        assert_that(result, contains_string('stroke="black"'))
+
     def test_handles_empty_elements_list(self):
         result = create_animated_diagram({"elements": []})
 

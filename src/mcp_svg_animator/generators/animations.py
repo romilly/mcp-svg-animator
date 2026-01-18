@@ -96,6 +96,20 @@ class TextSpec(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+class PathSpec(BaseModel):
+    """Specification for a path element."""
+
+    id: str | None = None
+    type: Literal["path"] = "path"
+    d: str  # SVG path data
+    fill: str = "none"
+    stroke: str = "black"
+    stroke_width: float = Field(default=1, alias="stroke_width")
+    animations: list[AnimationSpec] = Field(default_factory=list)
+
+    model_config = {"populate_by_name": True}
+
+
 class GroupSpec(BaseModel):
     """Specification for a group element."""
 
@@ -181,11 +195,21 @@ def _create_text(spec: TextSpec):
     )
 
 
+def _create_path(spec: PathSpec):
+    return draw.Path(
+        d=spec.d,
+        fill=spec.fill,
+        stroke=spec.stroke,
+        stroke_width=spec.stroke_width,
+    )
+
+
 _ELEMENT_CREATORS = {
     "circle": (CircleSpec, _create_circle),
     "rectangle": (RectangleSpec, _create_rectangle),
     "line": (LineSpec, _create_line),
     "text": (TextSpec, _create_text),
+    "path": (PathSpec, _create_path),
 }
 
 
