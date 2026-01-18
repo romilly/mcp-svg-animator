@@ -58,6 +58,36 @@ elements:
                 "required": ["yaml_spec"],
             },
         ),
+        Tool(
+            name="create_animation_video",
+            description="""Create a video file from an SVG animation.
+
+Takes an SVG with SMIL animations and records it to a .webm video file.
+The SVG can be created using create_svg_from_yaml first.
+
+Example usage:
+1. First create an SVG with animations using create_svg_from_yaml
+2. Then pass the SVG content to this tool to create a video""",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "svg_content": {
+                        "type": "string",
+                        "description": "SVG content with animations",
+                    },
+                    "output_path": {
+                        "type": "string",
+                        "description": "Path where the .webm video will be saved",
+                    },
+                    "duration_ms": {
+                        "type": "number",
+                        "description": "Duration of the video in milliseconds (default: 3000)",
+                        "default": 3000,
+                    },
+                },
+                "required": ["svg_content", "output_path"],
+            },
+        ),
     ]
 
 
@@ -70,6 +100,16 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
         yaml_spec = arguments.get("yaml_spec", "")
         svg_content = create_diagram_from_yaml(yaml_spec)
         return [TextContent(type="text", text=svg_content)]
+
+    if name == "create_animation_video":
+        from .generators.video_generator import create_video_from_svg
+
+        svg_content = arguments.get("svg_content", "")
+        output_path = arguments.get("output_path", "animation.webm")
+        duration_ms = int(arguments.get("duration_ms", 3000))
+
+        create_video_from_svg(svg_content, output_path, duration_ms=duration_ms)
+        return [TextContent(type="text", text=f"Video saved to {output_path}")]
 
     raise ValueError(f"Unknown tool: {name}")
 

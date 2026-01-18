@@ -7,3 +7,6 @@ svgwrite>=1.4.0
 
 # YAML support
 PyYAML>=6.0
+
+# Video generation
+playwright>=1.40.0
