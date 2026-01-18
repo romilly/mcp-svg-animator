@@ -1,0 +1,86 @@
+# Example demonstrating path segments for curves
+width: 400
+height: 300
+
+elements:
+  # A heart shape using cubic bezier curves
+  - type: path
+    segments:
+      - type: move_to
+        x: 200
+        y: 100
+      - type: cubic_bezier
+        x1: 200
+        y1: 50
+        x2: 130
+        y2: 50
+        x: 130
+        y: 100
+      - type: cubic_bezier
+        x1: 130
+        y1: 150
+        x2: 200
+        y2: 180
+        x: 200
+        y: 220
+      - type: cubic_bezier
+        x1: 200
+        y1: 180
+        x2: 270
+        y2: 150
+        x: 270
+        y: 100
+      - type: cubic_bezier
+        x1: 270
+        y1: 50
+        x2: 200
+        y2: 50
+        x: 200
+        y: 100
+      - type: close
+    fill: "#ff6b6b"
+    stroke: "#c92a2a"
+    stroke_width: 2
+
+  # A wavy line using quadratic beziers
+  - type: path
+    segments:
+      - type: move_to
+        x: 50
+        y: 260
+      - type: quadratic_bezier
+        x1: 100
+        y1: 230
+        x: 150
+        y: 260
+      - type: quadratic_bezier
+        x1: 200
+        y1: 290
+        x: 250
+        y: 260
+      - type: quadratic_bezier
+        x1: 300
+        y1: 230
+        x: 350
+        y: 260
+    fill: none
+    stroke: "#4dabf7"
+    stroke_width: 3
+
+  # An arc example - a simple curved arrow
+  - type: path
+    segments:
+      - type: move_to
+        x: 320
+        y: 50
+      - type: arc
+        rx: 40
+        ry: 40
+        rotation: 0
+        large_arc: false
+        sweep: true
+        x: 360
+        y: 90
+    fill: none
+    stroke: "#51cf66"
+    stroke_width: 3
