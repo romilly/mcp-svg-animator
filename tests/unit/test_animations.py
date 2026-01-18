@@ -156,3 +156,52 @@ class TestRelativePositioning:
         assert_that(result, contains_string('<rect'))
         # box2 should be at x=80 (10 + 70)
         assert_that(result, contains_string('x="80'))
+
+
+class TestGroups:
+    """Tests for SVG group elements."""
+
+    def test_creates_group_with_children(self):
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "group",
+                "elements": [
+                    {"type": "circle", "cx": 50, "cy": 50, "r": 20},
+                    {"type": "rectangle", "x": 100, "y": 100, "width": 50, "height": 30},
+                ]
+            }]
+        })
+
+        assert_that(result, contains_string('<g>'))
+        assert_that(result, contains_string('</g>'))
+        assert_that(result, contains_string('<circle'))
+        assert_that(result, contains_string('<rect'))
+
+    def test_creates_group_with_transform(self):
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "group",
+                "transform": "translate(100, 50)",
+                "elements": [
+                    {"type": "circle", "cx": 0, "cy": 0, "r": 20},
+                ]
+            }]
+        })
+
+        assert_that(result, contains_string('transform="translate(100, 50)"'))
+
+    def test_creates_nested_groups(self):
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "group",
+                "elements": [{
+                    "type": "group",
+                    "elements": [
+                        {"type": "circle", "cx": 50, "cy": 50, "r": 10},
+                    ]
+                }]
+            }]
+        })
+
+        # Should have two group tags
+        assert_that(result.count('<g'), equal_to(2))

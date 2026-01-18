@@ -82,6 +82,17 @@ class TextSpec(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+class GroupSpec(BaseModel):
+    """Specification for a group element."""
+
+    id: str | None = None
+    type: Literal["group"] = "group"
+    transform: str | None = None
+    elements: list[dict] = Field(default_factory=list)
+
+    model_config = {"populate_by_name": True}
+
+
 def create_animated_diagram(arguments: dict) -> str:
     """Create an animated SVG diagram.
 
@@ -176,11 +187,31 @@ def _apply_animations(element, animations: list[AnimationSpec]):
         element.append_anim(anim)
 
 
+def _create_group(spec: GroupSpec):
+    """Create a group element with its children."""
+    kwargs = {}
+    if spec.transform:
+        kwargs["transform"] = spec.transform
+
+    group = draw.Group(**kwargs)
+
+    for child_dict in spec.elements:
+        child = _create_element(child_dict)
+        group.append(child)
+
+    return group
+
+
 def _create_element(spec_dict: dict):
     """Create a single SVG element from a specification."""
     element_type = spec_dict.get("type")
     if element_type is None:
         raise ValueError("Element spec missing 'type' key")
+
+    # Handle groups specially due to recursive nature
+    if element_type == "group":
+        spec = GroupSpec.model_validate(spec_dict)
+        return _create_group(spec)
 
     creator_info = _ELEMENT_CREATORS.get(element_type)
     if creator_info is None:
