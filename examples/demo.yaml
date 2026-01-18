@@ -1,0 +1,62 @@
+# Example animated SVG diagram specification
+# Only 'type' is required - all other fields have defaults
+
+width: 400
+height: 300
+
+elements:
+  # Animated circle moving left to right
+  - type: circle
+    cx: 50
+    cy: 150
+    r: 30
+    fill: steelblue
+    animations:
+      - attribute: cx
+        dur: 3s
+        from_value: "50"
+        to_value: "350"
+        repeatCount: indefinite
+
+  # Pulsing circle
+  - type: circle
+    cx: 200
+    cy: 150
+    r: 20
+    fill: coral
+    animations:
+      - attribute: r
+        dur: 1s
+        from_value: "20"
+        to_value: "40"
+        repeatCount: indefinite
+
+  # Bouncing rectangle
+  - type: rectangle
+    x: 300
+    y: 50
+    width: 60
+    height: 60
+    fill: mediumseagreen
+    animations:
+      - attribute: y
+        dur: 2s
+        from_value: "50"
+        to_value: "190"
+        repeatCount: indefinite
+
+  # Static title
+  - type: text
+    content: Animated SVG Demo
+    x: 100
+    y: 30
+    font_size: 24
+    fill: darkslategray
+
+  # Static line
+  - type: line
+    x1: 20
+    y1: 280
+    x2: 380
+    y2: 280
+    stroke: gray
