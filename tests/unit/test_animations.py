@@ -140,3 +140,19 @@ class TestElementSpecs:
         spec = CircleSpec.model_validate({"type": "circle"})
 
         assert_that(spec.id, equal_to(None))
+
+
+class TestRelativePositioning:
+    """Tests for relative positioning in diagrams."""
+
+    def test_creates_elements_with_relative_positions(self):
+        result = create_animated_diagram({
+            "elements": [
+                {"id": "box1", "type": "rectangle", "x": 10, "y": 20, "width": 100},
+                {"id": "box2", "type": "rectangle", "x": "box1.x + 70", "y": "box1.y"},
+            ]
+        })
+
+        assert_that(result, contains_string('<rect'))
+        # box2 should be at x=80 (10 + 70)
+        assert_that(result, contains_string('x="80'))

@@ -5,6 +5,8 @@ from typing import Literal, cast
 import drawsvg as draw
 from pydantic import BaseModel, Field
 
+from .position_resolver import resolve_positions
+
 
 class AnimationSpec(BaseModel):
     """Specification for an SVG animation."""
@@ -87,7 +89,8 @@ def create_animated_diagram(arguments: dict) -> str:
         arguments: Dictionary containing:
             - width: Canvas width (default 400)
             - height: Canvas height (default 300)
-            - elements: List of shape specifications
+            - elements: List of shape specifications. Position attributes
+                can use relative references like "element_id.x + 70".
 
     Returns:
         SVG content as a string.
@@ -96,9 +99,12 @@ def create_animated_diagram(arguments: dict) -> str:
     height = arguments.get("height", 300)
     elements = arguments.get("elements", [])
 
+    # Resolve relative position references before creating elements
+    resolved_elements = resolve_positions(elements)
+
     d = draw.Drawing(width, height)
 
-    for element in elements:
+    for element in resolved_elements:
         shape = _create_element(element)
         d.append(shape)
 
