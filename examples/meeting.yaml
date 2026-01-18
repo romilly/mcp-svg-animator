@@ -1,0 +1,93 @@
+# Two stick figures - one walks over to meet the other
+width: 400
+height: 300
+
+definitions:
+  stick_figure:
+    type: group
+    elements:
+      # Head
+      - type: circle
+        cx: 0
+        cy: 0
+        r: 20
+        fill: none
+        stroke: black
+        stroke_width: 2
+      # Left eye
+      - type: circle
+        cx: -7
+        cy: -5
+        r: 3
+        fill: black
+      # Right eye
+      - type: circle
+        cx: 7
+        cy: -5
+        r: 3
+        fill: black
+      # Smile
+      - type: line
+        x1: -8
+        y1: 5
+        x2: 8
+        y2: 5
+        stroke: black
+        stroke_width: 2
+      # Body
+      - type: line
+        x1: 0
+        y1: 20
+        x2: 0
+        y2: 80
+        stroke: black
+        stroke_width: 2
+      # Left arm
+      - type: line
+        x1: 0
+        y1: 40
+        x2: -30
+        y2: 60
+        stroke: black
+        stroke_width: 2
+      # Right arm
+      - type: line
+        x1: 0
+        y1: 40
+        x2: 30
+        y2: 60
+        stroke: black
+        stroke_width: 2
+      # Left leg
+      - type: line
+        x1: 0
+        y1: 80
+        x2: -20
+        y2: 130
+        stroke: black
+        stroke_width: 2
+      # Right leg
+      - type: line
+        x1: 0
+        y1: 80
+        x2: 20
+        y2: 130
+        stroke: black
+        stroke_width: 2
+
+elements:
+  # Person 1 - starts on the left, walks to the right
+  - use: stick_figure
+    id: person1
+    transform: translate(80, 120)
+    transform_animations:
+      - type: translate
+        from: "80 120"
+        to: "250 120"
+        dur: 3s
+        repeatCount: indefinite
+
+  # Person 2 - stays on the right
+  - use: stick_figure
+    id: person2
+    transform: translate(320, 120)
