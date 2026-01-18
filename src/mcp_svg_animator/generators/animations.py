@@ -1,30 +1,80 @@
 """Animated SVG diagram generator using drawsvg."""
 
-from dataclasses import dataclass
-from typing import cast
+from typing import Literal, cast
 
 import drawsvg as draw
+from pydantic import BaseModel, Field
 
 
-@dataclass
-class AnimationSpec:
+class AnimationSpec(BaseModel):
     """Specification for an SVG animation."""
 
     attribute: str
     dur: str
     from_value: str | None = None
     to_value: str | None = None
-    repeat_count: str | None = None
+    repeat_count: str | None = Field(default=None, alias="repeatCount")
 
-    @classmethod
-    def from_dict(cls, data: dict) -> "AnimationSpec":
-        return cls(
-            attribute=data["attribute"],
-            dur=data["dur"],
-            from_value=data.get("from_value"),
-            to_value=data.get("to_value"),
-            repeat_count=data.get("repeatCount"),
-        )
+    model_config = {"populate_by_name": True}
+
+
+class ElementSpec(BaseModel):
+    """Base specification for SVG elements."""
+
+    fill: str = "blue"
+    stroke: str = "none"
+    stroke_width: float = Field(default=0, alias="stroke_width")
+    animations: list[AnimationSpec] = Field(default_factory=list)
+
+    model_config = {"populate_by_name": True}
+
+
+class CircleSpec(ElementSpec):
+    """Specification for a circle element."""
+
+    type: Literal["circle"] = "circle"
+    cx: float = 50
+    cy: float = 50
+    r: float = 25
+
+
+class RectangleSpec(ElementSpec):
+    """Specification for a rectangle element."""
+
+    type: Literal["rectangle"] = "rectangle"
+    x: float = 0
+    y: float = 0
+    width: float = 100
+    height: float = 50
+
+
+class LineSpec(BaseModel):
+    """Specification for a line element."""
+
+    type: Literal["line"] = "line"
+    x1: float = 0
+    y1: float = 0
+    x2: float = 100
+    y2: float = 100
+    stroke: str = "black"
+    stroke_width: float = Field(default=2, alias="stroke_width")
+    animations: list[AnimationSpec] = Field(default_factory=list)
+
+    model_config = {"populate_by_name": True}
+
+
+class TextSpec(BaseModel):
+    """Specification for a text element."""
+
+    type: Literal["text"] = "text"
+    content: str = ""
+    font_size: float = 16
+    x: float = 0
+    y: float = 0
+    fill: str = "black"
+    animations: list[AnimationSpec] = Field(default_factory=list)
+
+    model_config = {"populate_by_name": True}
 
 
 def create_animated_diagram(arguments: dict) -> str:
@@ -35,7 +85,6 @@ def create_animated_diagram(arguments: dict) -> str:
             - width: Canvas width (default 400)
             - height: Canvas height (default 300)
             - elements: List of shape specifications
-            - animations: List of animation specifications
 
     Returns:
         SVG content as a string.
@@ -43,7 +92,6 @@ def create_animated_diagram(arguments: dict) -> str:
     width = arguments.get("width", 400)
     height = arguments.get("height", 300)
     elements = arguments.get("elements", [])
-    animations = arguments.get("animations", [])
 
     d = draw.Drawing(width, height)
 
@@ -54,62 +102,61 @@ def create_animated_diagram(arguments: dict) -> str:
     return cast(str, d.as_svg())
 
 
-def _create_circle(spec: dict):
+def _create_circle(spec: CircleSpec):
     return draw.Circle(
-        spec.get("cx", 50),
-        spec.get("cy", 50),
-        spec.get("r", 25),
-        fill=spec.get("fill", "blue"),
-        stroke=spec.get("stroke", "none"),
-        stroke_width=spec.get("stroke_width", 0),
+        spec.cx,
+        spec.cy,
+        spec.r,
+        fill=spec.fill,
+        stroke=spec.stroke,
+        stroke_width=spec.stroke_width,
     )
 
 
-def _create_rectangle(spec: dict):
+def _create_rectangle(spec: RectangleSpec):
     return draw.Rectangle(
-        spec.get("x", 0),
-        spec.get("y", 0),
-        spec.get("width", 100),
-        spec.get("height", 50),
-        fill=spec.get("fill", "blue"),
-        stroke=spec.get("stroke", "none"),
-        stroke_width=spec.get("stroke_width", 0),
+        spec.x,
+        spec.y,
+        spec.width,
+        spec.height,
+        fill=spec.fill,
+        stroke=spec.stroke,
+        stroke_width=spec.stroke_width,
     )
 
 
-def _create_line(spec: dict):
+def _create_line(spec: LineSpec):
     return draw.Line(
-        spec.get("x1", 0),
-        spec.get("y1", 0),
-        spec.get("x2", 100),
-        spec.get("y2", 100),
-        stroke=spec.get("stroke", "black"),
-        stroke_width=spec.get("stroke_width", 2),
+        spec.x1,
+        spec.y1,
+        spec.x2,
+        spec.y2,
+        stroke=spec.stroke,
+        stroke_width=spec.stroke_width,
     )
 
 
-def _create_text(spec: dict):
+def _create_text(spec: TextSpec):
     return draw.Text(
-        spec.get("content", ""),
-        spec.get("font_size", 16),
-        spec.get("x", 0),
-        spec.get("y", 0),
-        fill=spec.get("fill", "black"),
+        spec.content,
+        spec.font_size,
+        spec.x,
+        spec.y,
+        fill=spec.fill,
     )
 
 
 _ELEMENT_CREATORS = {
-    "circle": _create_circle,
-    "rectangle": _create_rectangle,
-    "line": _create_line,
-    "text": _create_text,
+    "circle": (CircleSpec, _create_circle),
+    "rectangle": (RectangleSpec, _create_rectangle),
+    "line": (LineSpec, _create_line),
+    "text": (TextSpec, _create_text),
 }
 
 
-def _apply_animations(element, animations: list[dict]):
+def _apply_animations(element, animations: list[AnimationSpec]):
     """Apply animations to an SVG element."""
-    for anim_dict in animations:
-        spec = AnimationSpec.from_dict(anim_dict)
+    for spec in animations:
         anim = draw.Animate(
             spec.attribute,
             spec.dur,
@@ -120,16 +167,21 @@ def _apply_animations(element, animations: list[dict]):
         element.append_anim(anim)
 
 
-def _create_element(spec: dict):
+def _create_element(spec_dict: dict):
     """Create a single SVG element from a specification."""
-    element_type = spec.get("type")
+    element_type = spec_dict.get("type")
     if element_type is None:
         raise ValueError("Element spec missing 'type' key")
-    creator = _ELEMENT_CREATORS.get(element_type)
-    if creator is None:
+
+    creator_info = _ELEMENT_CREATORS.get(element_type)
+    if creator_info is None:
         raise ValueError(f"Unknown element type: {element_type}")
+
+    spec_class, creator = creator_info
+    spec = spec_class.model_validate(spec_dict)
     element = creator(spec)
-    animations = spec.get("animations", [])
-    if animations:
-        _apply_animations(element, animations)
+
+    if spec.animations:
+        _apply_animations(element, spec.animations)
+
     return element

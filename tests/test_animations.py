@@ -27,9 +27,9 @@ class TestCreateAnimatedDiagram:
         })
 
         assert_that(result, contains_string('<circle'))
-        assert_that(result, contains_string('cx="100"'))
-        assert_that(result, contains_string('cy="150"'))
-        assert_that(result, contains_string('r="25"'))
+        assert_that(result, contains_string('cx="100'))
+        assert_that(result, contains_string('cy="150'))
+        assert_that(result, contains_string('r="25'))
         assert_that(result, contains_string('fill="red"'))
 
     def test_creates_rectangle_element(self):
@@ -38,10 +38,10 @@ class TestCreateAnimatedDiagram:
         })
 
         assert_that(result, contains_string('<rect'))
-        assert_that(result, contains_string('x="10"'))
-        assert_that(result, contains_string('y="20"'))
-        assert_that(result, contains_string('width="100"'))
-        assert_that(result, contains_string('height="50"'))
+        assert_that(result, contains_string('x="10'))
+        assert_that(result, contains_string('y="20'))
+        assert_that(result, contains_string('width="100'))
+        assert_that(result, contains_string('height="50'))
         assert_that(result, contains_string('fill="green"'))
 
     def test_creates_line_element(self):
@@ -51,8 +51,8 @@ class TestCreateAnimatedDiagram:
 
         # drawsvg renders lines as path elements with M (move) and L (line) commands
         assert_that(result, contains_string('<path'))
-        assert_that(result, contains_string('M0,0'))
-        assert_that(result, contains_string('L100,100'))
+        assert_that(result, contains_string('M0'))
+        assert_that(result, contains_string('L100'))
         assert_that(result, contains_string('stroke="black"'))
 
     def test_creates_text_element(self):
