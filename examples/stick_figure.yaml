@@ -1,0 +1,91 @@
+# Stick figure based on sketch
+width: 200
+height: 300
+
+elements:
+  - id: stick_figure
+    type: group
+    elements:
+      # Head group
+      - id: head
+        type: group
+        elements:
+          - type: circle
+            cx: 100
+            cy: 50
+            r: 30
+            fill: none
+            stroke: black
+            stroke_width: 2
+
+          # Left eye
+          - type: circle
+            cx: 90
+            cy: 45
+            r: 5
+            fill: black
+
+          # Right eye
+          - type: circle
+            cx: 110
+            cy: 45
+            r: 5
+            fill: black
+
+          # Smile
+          - type: line
+            x1: 88
+            y1: 60
+            x2: 112
+            y2: 60
+            stroke: black
+            stroke_width: 2
+
+      # Body group
+      - id: body
+        type: group
+        elements:
+          # Torso
+          - type: line
+            x1: 100
+            y1: 80
+            x2: 100
+            y2: 180
+            stroke: black
+            stroke_width: 2
+
+          # Left arm
+          - type: line
+            x1: 100
+            y1: 120
+            x2: 50
+            y2: 100
+            stroke: black
+            stroke_width: 2
+
+          # Right arm
+          - type: line
+            x1: 100
+            y1: 120
+            x2: 150
+            y2: 100
+            stroke: black
+            stroke_width: 2
+
+          # Left leg
+          - type: line
+            x1: 100
+            y1: 180
+            x2: 60
+            y2: 260
+            stroke: black
+            stroke_width: 2
+
+          # Right leg
+          - type: line
+            x1: 100
+            y1: 180
+            x2: 140
+            y2: 260
+            stroke: black
+            stroke_width: 2
