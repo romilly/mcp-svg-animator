@@ -1,4 +1,6 @@
-# Production dependencies
-# Add your dependencies here
+# MCP SDK
+mcp>=1.0.0
 
-# Development dependencies are in requirements-test.txt
+# SVG generation libraries
+drawsvg>=2.0.0
+svgwrite>=1.4.0
