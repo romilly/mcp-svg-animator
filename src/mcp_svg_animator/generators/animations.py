@@ -20,6 +20,20 @@ class AnimationSpec(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+class TransformAnimationSpec(BaseModel):
+    """Specification for an SVG transform animation (animateTransform)."""
+
+    type: str  # rotate, translate, scale, skewX, skewY
+    dur: str
+    values: str | None = None
+    from_value: str | None = Field(default=None, alias="from")
+    to_value: str | None = Field(default=None, alias="to")
+    repeat_count: str | None = Field(default=None, alias="repeatCount")
+    additive: str | None = None  # sum or replace
+
+    model_config = {"populate_by_name": True}
+
+
 class ElementSpec(BaseModel):
     """Base specification for SVG elements."""
 
@@ -88,6 +102,7 @@ class GroupSpec(BaseModel):
     id: str | None = None
     type: Literal["group"] = "group"
     transform: str | None = None
+    transform_animations: list[TransformAnimationSpec] = Field(default_factory=list)
     elements: list[dict] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
@@ -199,7 +214,32 @@ def _create_group(spec: GroupSpec):
         child = _create_element(child_dict)
         group.append(child)
 
+    # Apply transform animations
+    for anim in spec.transform_animations:
+        group.append(_create_transform_animation(anim))
+
     return group
+
+
+def _create_transform_animation(spec: TransformAnimationSpec):
+    """Create an animateTransform element."""
+    attrs = [
+        'attributeName="transform"',
+        f'type="{spec.type}"',
+        f'dur="{spec.dur}"',
+    ]
+    if spec.values:
+        attrs.append(f'values="{spec.values}"')
+    if spec.from_value:
+        attrs.append(f'from="{spec.from_value}"')
+    if spec.to_value:
+        attrs.append(f'to="{spec.to_value}"')
+    if spec.repeat_count:
+        attrs.append(f'repeatCount="{spec.repeat_count}"')
+    if spec.additive:
+        attrs.append(f'additive="{spec.additive}"')
+
+    return draw.Raw(f'<animateTransform {" ".join(attrs)}/>')
 
 
 def _create_element(spec_dict: dict):

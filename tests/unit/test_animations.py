@@ -205,3 +205,25 @@ class TestGroups:
 
         # Should have two group tags
         assert_that(result.count('<g'), equal_to(2))
+
+    def test_creates_group_with_transform_animation(self):
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "group",
+                "transform": "translate(100, 100)",
+                "transform_animations": [{
+                    "type": "rotate",
+                    "values": "-20;20;-20",
+                    "dur": "0.5s",
+                    "repeatCount": "indefinite",
+                }],
+                "elements": [
+                    {"type": "line", "x1": 0, "y1": 0, "x2": 50, "y2": 0},
+                ]
+            }]
+        })
+
+        assert_that(result, contains_string('<animateTransform'))
+        assert_that(result, contains_string('type="rotate"'))
+        assert_that(result, contains_string('values="-20;20;-20"'))
+        assert_that(result, contains_string('dur="0.5s"'))
