@@ -60,3 +60,19 @@ elements:
     x2: 380
     y2: 280
     stroke: gray
+
+  # Group example - a simple icon made of shapes
+  - type: group
+    transform: "translate(30, 220)"
+    elements:
+      - type: rectangle
+        x: 0
+        y: 0
+        width: 30
+        height: 40
+        fill: slategray
+      - type: circle
+        cx: 15
+        cy: -10
+        r: 12
+        fill: peachpuff
