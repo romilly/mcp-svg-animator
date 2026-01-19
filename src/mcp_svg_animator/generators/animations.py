@@ -7,20 +7,7 @@ from pydantic import BaseModel, Field
 
 from .position_resolver import resolve_positions
 from .specs.animation_spec import AnimationSpec
-
-
-class TransformAnimationSpec(BaseModel):
-    """Specification for an SVG transform animation (animateTransform)."""
-
-    type: str  # rotate, translate, scale, skewX, skewY
-    dur: str
-    values: str | None = None
-    from_value: str | None = Field(default=None, alias="from")
-    to_value: str | None = Field(default=None, alias="to")
-    repeat_count: str | None = Field(default=None, alias="repeatCount")
-    additive: str | None = None  # sum or replace
-
-    model_config = {"populate_by_name": True}
+from .specs.transform_animation_spec import TransformAnimationSpec
 
 
 class ElementSpec(BaseModel):
