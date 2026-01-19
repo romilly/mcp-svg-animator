@@ -7,19 +7,8 @@ from pydantic import BaseModel, Field
 
 from .position_resolver import resolve_positions
 from .specs.animation_spec import AnimationSpec
+from .specs.element_spec import ElementSpec
 from .specs.transform_animation_spec import TransformAnimationSpec
-
-
-class ElementSpec(BaseModel):
-    """Base specification for SVG elements."""
-
-    id: str | None = None
-    fill: str = "blue"
-    stroke: str = "none"
-    stroke_width: float = Field(default=0, alias="stroke_width")
-    animations: list[AnimationSpec] = Field(default_factory=list)
-
-    model_config = {"populate_by_name": True}
 
 
 class CircleSpec(ElementSpec):
