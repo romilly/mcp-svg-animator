@@ -11,23 +11,8 @@ from .specs.circle_spec import CircleSpec
 from .specs.element_spec import ElementSpec
 from .specs.line_spec import LineSpec
 from .specs.rectangle_spec import RectangleSpec
+from .specs.text_spec import TextSpec
 from .specs.transform_animation_spec import TransformAnimationSpec
-
-
-class TextSpec(BaseModel):
-    """Specification for a text element."""
-
-    id: str | None = None
-    type: Literal["text"] = "text"
-    text: str = ""
-    font_size: float = 16
-    x: float = 0
-    y: float = 0
-    fill: str = "black"
-    text_anchor: str | None = None
-    animations: list[AnimationSpec] = Field(default_factory=list)
-
-    model_config = {"populate_by_name": True}
 
 
 class MoveToSpec(BaseModel):
