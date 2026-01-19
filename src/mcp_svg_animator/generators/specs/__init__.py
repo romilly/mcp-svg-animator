@@ -4,6 +4,7 @@ from .animation_spec import AnimationSpec
 from .circle_spec import CircleSpec
 from .element_spec import ElementSpec
 from .line_spec import LineSpec
+from .path_spec import PathSpec
 from .rectangle_spec import RectangleSpec
 from .segment_specs import (
     ArcSpec,
@@ -28,6 +29,7 @@ __all__ = [
     "LineSpec",
     "LineToSpec",
     "MoveToSpec",
+    "PathSpec",
     "QuadraticBezierSpec",
     "RectangleSpec",
     "SegmentSpec",
