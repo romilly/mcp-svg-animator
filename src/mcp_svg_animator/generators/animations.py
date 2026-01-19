@@ -9,19 +9,8 @@ from .position_resolver import resolve_positions
 from .specs.animation_spec import AnimationSpec
 from .specs.circle_spec import CircleSpec
 from .specs.element_spec import ElementSpec
+from .specs.rectangle_spec import RectangleSpec
 from .specs.transform_animation_spec import TransformAnimationSpec
-
-
-class RectangleSpec(ElementSpec):
-    """Specification for a rectangle element."""
-
-    type: Literal["rectangle"] = "rectangle"
-    x: float = 0
-    y: float = 0
-    width: float = 100
-    height: float = 50
-    rx: float | None = None
-    ry: float | None = None
 
 
 class LineSpec(BaseModel):
