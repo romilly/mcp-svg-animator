@@ -9,23 +9,12 @@ from .position_resolver import resolve_positions
 from .specs.animation_spec import AnimationSpec
 from .specs.circle_spec import CircleSpec
 from .specs.element_spec import ElementSpec
+from .specs.group_spec import GroupSpec
 from .specs.line_spec import LineSpec
 from .specs.path_spec import PathSpec
 from .specs.rectangle_spec import RectangleSpec
 from .specs.text_spec import TextSpec
 from .specs.transform_animation_spec import TransformAnimationSpec
-
-
-class GroupSpec(BaseModel):
-    """Specification for a group element."""
-
-    id: str | None = None
-    type: Literal["group"] = "group"
-    transform: str | None = None
-    transform_animations: list[TransformAnimationSpec] = Field(default_factory=list)
-    elements: list[dict] = Field(default_factory=list)
-
-    model_config = {"populate_by_name": True}
 
 
 def create_animated_diagram(arguments: dict) -> str:
