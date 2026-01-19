@@ -1,14 +1,12 @@
 """Animated SVG diagram generator using drawsvg."""
 
-from typing import Annotated, Literal, cast
+from typing import cast
 
 import drawsvg as draw
-from pydantic import BaseModel, Field
 
 from .position_resolver import resolve_positions
 from .specs.animation_spec import AnimationSpec
 from .specs.circle_spec import CircleSpec
-from .specs.element_spec import ElementSpec
 from .specs.group_spec import GroupSpec
 from .specs.line_spec import LineSpec
 from .specs.path_spec import PathSpec
