@@ -63,6 +63,8 @@ class RectangleSpec(ElementSpec):
     y: float = 0
     width: float = 100
     height: float = 50
+    rx: float | None = None
+    ry: float | None = None
 
 
 class LineSpec(BaseModel):
@@ -76,6 +78,7 @@ class LineSpec(BaseModel):
     y2: float = 100
     stroke: str = "black"
     stroke_width: float = Field(default=2, alias="stroke_width")
+    marker_end: str | None = None
     animations: list[AnimationSpec] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
@@ -86,11 +89,12 @@ class TextSpec(BaseModel):
 
     id: str | None = None
     type: Literal["text"] = "text"
-    content: str = ""
+    text: str = ""
     font_size: float = 16
     x: float = 0
     y: float = 0
     fill: str = "black"
+    text_anchor: str | None = None
     animations: list[AnimationSpec] = Field(default_factory=list)
 
     model_config = {"populate_by_name": True}
@@ -260,6 +264,11 @@ def _create_circle(spec: CircleSpec):
 
 
 def _create_rectangle(spec: RectangleSpec):
+    kwargs: dict[str, float] = {}
+    if spec.rx is not None:
+        kwargs["rx"] = spec.rx
+    if spec.ry is not None:
+        kwargs["ry"] = spec.ry
     return draw.Rectangle(
         spec.x,
         spec.y,
@@ -268,10 +277,21 @@ def _create_rectangle(spec: RectangleSpec):
         fill=spec.fill,
         stroke=spec.stroke,
         stroke_width=spec.stroke_width,
+        **kwargs,
     )
 
 
+def _create_arrow_marker(color: str = "black"):
+    """Create an arrow marker for line endings."""
+    arrow = draw.Marker(-0.1, -0.5, 0.9, 0.5, scale=4, orient="auto", id="arrow")
+    arrow.append(draw.Lines(-0.1, -0.5, -0.1, 0.5, 0.9, 0, fill=color, close=True))
+    return arrow
+
+
 def _create_line(spec: LineSpec):
+    kwargs = {}
+    if spec.marker_end == "arrow":
+        kwargs["marker_end"] = _create_arrow_marker(spec.stroke)
     return draw.Line(
         spec.x1,
         spec.y1,
@@ -279,16 +299,21 @@ def _create_line(spec: LineSpec):
         spec.y2,
         stroke=spec.stroke,
         stroke_width=spec.stroke_width,
+        **kwargs,
     )
 
 
 def _create_text(spec: TextSpec):
+    kwargs: dict[str, str] = {}
+    if spec.text_anchor:
+        kwargs["text_anchor"] = spec.text_anchor
     return draw.Text(
-        spec.content,
+        spec.text,
         spec.font_size,
         spec.x,
         spec.y,
         fill=spec.fill,
+        **kwargs,
     )
 
 

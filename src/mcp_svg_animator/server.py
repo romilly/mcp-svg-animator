@@ -102,13 +102,17 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
         return [TextContent(type="text", text=svg_content)]
 
     if name == "create_animation_video":
+        import asyncio
         from .generators.video_generator import create_video_from_svg
 
         svg_content = arguments.get("svg_content", "")
         output_path = arguments.get("output_path", "animation.webm")
         duration_ms = int(arguments.get("duration_ms", 3000))
 
-        create_video_from_svg(svg_content, output_path, duration_ms=duration_ms)
+        # Run sync Playwright code in a separate thread to avoid async conflict
+        await asyncio.to_thread(
+            create_video_from_svg, svg_content, output_path, duration_ms=duration_ms
+        )
         return [TextContent(type="text", text=f"Video saved to {output_path}")]
 
     raise ValueError(f"Unknown tool: {name}")

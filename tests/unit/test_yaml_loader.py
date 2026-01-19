@@ -199,3 +199,84 @@ elements:
 """
         with pytest.raises(FileNotFoundError):
             create_diagram_from_yaml(yaml_content)
+
+
+class TestRectangleElements:
+    """Tests for rectangle element handling."""
+
+    def test_rectangle_with_rounded_corners(self):
+        """Rectangle with rx should have rounded corners."""
+        yaml_content = """
+width: 400
+height: 300
+elements:
+  - type: rectangle
+    x: 50
+    y: 50
+    width: 100
+    height: 60
+    rx: 10
+    fill: blue
+"""
+        result = create_diagram_from_yaml(yaml_content)
+
+        assert_that(result, contains_string('rx="10'))
+
+
+class TestLineElements:
+    """Tests for line element handling."""
+
+    def test_line_with_arrow_marker(self):
+        """Line with marker_end: arrow should have an arrowhead."""
+        yaml_content = """
+width: 400
+height: 300
+elements:
+  - type: line
+    x1: 50
+    y1: 150
+    x2: 350
+    y2: 150
+    stroke: black
+    marker_end: arrow
+"""
+        result = create_diagram_from_yaml(yaml_content)
+
+        assert_that(result, contains_string('<marker'))
+        assert_that(result, contains_string('marker-end="url(#arrow)"'))
+
+
+class TestTextElements:
+    """Tests for text element handling."""
+
+    def test_text_attribute_appears_in_svg(self):
+        """Text specified with 'text' attribute should appear in output."""
+        yaml_content = """
+width: 400
+height: 300
+elements:
+  - type: text
+    x: 100
+    y: 150
+    text: "Hello World"
+    fill: black
+"""
+        result = create_diagram_from_yaml(yaml_content)
+
+        assert_that(result, contains_string("Hello World"))
+
+    def test_text_anchor_centers_text(self):
+        """Text with text_anchor middle should have text-anchor attribute."""
+        yaml_content = """
+width: 400
+height: 300
+elements:
+  - type: text
+    x: 200
+    y: 150
+    text: "Centered"
+    text_anchor: middle
+"""
+        result = create_diagram_from_yaml(yaml_content)
+
+        assert_that(result, contains_string('text-anchor="middle"'))

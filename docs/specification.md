@@ -46,6 +46,8 @@ elements:           # List of elements to render
   y: 20               # Top-left y coordinate
   width: 100          # Width
   height: 50          # Height
+  rx: 10              # Horizontal corner radius (optional)
+  ry: 10              # Vertical corner radius (optional)
   fill: green
   stroke: black
   stroke_width: 1
@@ -61,17 +63,19 @@ elements:           # List of elements to render
   y2: 100             # End y
   stroke: black       # Stroke color (default: black)
   stroke_width: 2     # Stroke width (default: 2)
+  marker_end: arrow   # Add arrowhead at end (optional)
 ```
 
 ### Text
 
 ```yaml
 - type: text
-  content: "Hello"    # Text content
+  text: "Hello"       # Text content
   x: 50               # x position
   y: 75               # y position
   font_size: 24       # Font size (default: 16)
   fill: black         # Text color (default: black)
+  text_anchor: middle # Alignment: start, middle, end (optional)
 ```
 
 ### Path

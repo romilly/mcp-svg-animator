@@ -61,7 +61,7 @@ class TestCreateAnimatedDiagram:
 
     def test_creates_text_element(self):
         result = create_animated_diagram({
-            "elements": [{"type": "text", "content": "Hello", "x": 50, "y": 75, "font_size": 24}]
+            "elements": [{"type": "text", "text": "Hello", "x": 50, "y": 75, "font_size": 24}]
         })
 
         assert_that(result, contains_string('<text'))
