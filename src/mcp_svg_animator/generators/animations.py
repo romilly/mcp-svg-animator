@@ -7,17 +7,9 @@ from pydantic import BaseModel, Field
 
 from .position_resolver import resolve_positions
 from .specs.animation_spec import AnimationSpec
+from .specs.circle_spec import CircleSpec
 from .specs.element_spec import ElementSpec
 from .specs.transform_animation_spec import TransformAnimationSpec
-
-
-class CircleSpec(ElementSpec):
-    """Specification for a circle element."""
-
-    type: Literal["circle"] = "circle"
-    cx: float = 50
-    cy: float = 50
-    r: float = 25
 
 
 class RectangleSpec(ElementSpec):
