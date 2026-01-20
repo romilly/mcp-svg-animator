@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="700" height="450" viewBox="0 0 700 450">
+
+<text x="350" y="30" font-size="18" fill="black" text-anchor="middle">Nuclear Fission: n + U-235 → Ba + Kr + 2n + Energy</text>
+
+<!-- INCOMING NEUTRON - moves right toward nucleus -->
+<g transform="translate(50, 225)">
+  <circle cx="0" cy="0" r="15" fill="gray" stroke="black" stroke-width="2"/>
+  <text x="0" y="5" font-size="12" fill="white" text-anchor="middle">n</text>
+  <animateTransform attributeName="transform" type="translate" dur="6s"
+    values="50 225; 50 225; 200 225; 280 225; 280 225; 280 225" fill="freeze"/>
+</g>
+
+<!-- U-235 NUCLEUS - large cluster, then deforms and splits -->
+<!-- Main nucleus - visible until split -->
+<g opacity="1">
+  <animate attributeName="opacity" values="1; 1; 1; 1; 0; 0" dur="6s" fill="freeze"/>
+
+  <!-- Nucleus cluster - protons (red) and neutrons (gray) -->
+  <circle cx="320" cy="225" r="50" fill="#8B4513" stroke="black" stroke-width="2"/>
+  <circle cx="305" cy="210" r="12" fill="red" stroke="black" stroke-width="1"/>
+  <circle cx="330" cy="205" r="12" fill="gray" stroke="black" stroke-width="1"/>
+  <circle cx="350" cy="220" r="12" fill="red" stroke="black" stroke-width="1"/>
+  <circle cx="340" cy="240" r="12" fill="gray" stroke="black" stroke-width="1"/>
+  <circle cx="310" cy="235" r="12" fill="red" stroke="black" stroke-width="1"/>
+  <circle cx="295" cy="225" r="12" fill="gray" stroke="black" stroke-width="1"/>
+  <circle cx="325" cy="225" r="12" fill="red" stroke="black" stroke-width="1"/>
+
+  <!-- Wobble animation before split -->
+  <animateTransform attributeName="transform" type="scale" dur="6s"
+    values="1 1; 1 1; 1 1; 1.1 0.9; 0.9 1.1; 1 1" fill="freeze"/>
+</g>
+
+<!-- U-235 label -->
+<text x="320" y="300" font-size="16" fill="black" text-anchor="middle" opacity="1">
+  U-235
+  <animate attributeName="opacity" values="1; 1; 1; 1; 0; 0" dur="6s" fill="freeze"/>
+</text>
+
+<!-- FISSION PRODUCT 1 (Barium) - appears and moves up-left -->
+<g opacity="0" transform="translate(320, 225)">
+  <animate attributeName="opacity" values="0; 0; 0; 0; 1; 1" dur="6s" fill="freeze"/>
+  <animateTransform attributeName="transform" type="translate" dur="6s"
+    values="320 225; 320 225; 320 225; 320 225; 200 140; 150 100" fill="freeze"/>
+
+  <circle cx="0" cy="0" r="35" fill="#8B4513" stroke="black" stroke-width="2"/>
+  <circle cx="-10" cy="-8" r="10" fill="red" stroke="black" stroke-width="1"/>
+  <circle cx="10" cy="-5" r="10" fill="gray" stroke="black" stroke-width="1"/>
+  <circle cx="5" cy="12" r="10" fill="red" stroke="black" stroke-width="1"/>
+  <circle cx="-12" cy="10" r="10" fill="gray" stroke="black" stroke-width="1"/>
+</g>
+
+<!-- Ba label -->
+<text x="150" y="150" font-size="14" fill="black" text-anchor="middle" opacity="0">
+  Ba-141
+  <animate attributeName="opacity" values="0; 0; 0; 0; 0; 1" dur="6s" fill="freeze"/>
+</text>
+
+<!-- FISSION PRODUCT 2 (Krypton) - appears and moves down-right -->
+<g opacity="0" transform="translate(320, 225)">
+  <animate attributeName="opacity" values="0; 0; 0; 0; 1; 1" dur="6s" fill="freeze"/>
+  <animateTransform attributeName="transform" type="translate" dur="6s"
+    values="320 225; 320 225; 320 225; 320 225; 440 310; 500 350" fill="freeze"/>
+
+  <circle cx="0" cy="0" r="30" fill="#8B4513" stroke="black" stroke-width="2"/>
+  <circle cx="-8" cy="-5" r="9" fill="red" stroke="black" stroke-width="1"/>
+  <circle cx="8" cy="-3" r="9" fill="gray" stroke="black" stroke-width="1"/>
+  <circle cx="0" cy="10" r="9" fill="red" stroke="black" stroke-width="1"/>
+</g>
+
+<!-- Kr label -->
+<text x="540" y="380" font-size="14" fill="black" text-anchor="middle" opacity="0">
+  Kr-92
+  <animate attributeName="opacity" values="0; 0; 0; 0; 0; 1" dur="6s" fill="freeze"/>
+</text>
+
+<!-- RELEASED NEUTRON 1 - flies up-right -->
+<g opacity="0" transform="translate(320, 225)">
+  <animate attributeName="opacity" values="0; 0; 0; 0; 1; 1" dur="6s" fill="freeze"/>
+  <animateTransform attributeName="transform" type="translate" dur="6s"
+    values="320 225; 320 225; 320 225; 320 225; 450 130; 550 60" fill="freeze"/>
+
+  <circle cx="0" cy="0" r="15" fill="gray" stroke="black" stroke-width="2"/>
+  <text x="0" y="5" font-size="12" fill="white" text-anchor="middle">n</text>
+</g>
+
+<!-- RELEASED NEUTRON 2 - flies down-left -->
+<g opacity="0" transform="translate(320, 225)">
+  <animate attributeName="opacity" values="0; 0; 0; 0; 1; 1" dur="6s" fill="freeze"/>
+  <animateTransform attributeName="transform" type="translate" dur="6s"
+    values="320 225; 320 225; 320 225; 320 225; 200 320; 100 390" fill="freeze"/>
+
+  <circle cx="0" cy="0" r="15" fill="gray" stroke="black" stroke-width="2"/>
+  <text x="0" y="5" font-size="12" fill="white" text-anchor="middle">n</text>
+</g>
+
+<!-- ENERGY RELEASE - burst at moment of fission -->
+<circle cx="320" cy="225" r="0" fill="yellow" opacity="0">
+  <animate attributeName="r" values="0; 0; 0; 0; 80; 150; 0" dur="6s" fill="freeze"/>
+  <animate attributeName="opacity" values="0; 0; 0; 0; 0.8; 0.3; 0" dur="6s" fill="freeze"/>
+</circle>
+<circle cx="320" cy="225" r="0" fill="none" stroke="orange" stroke-width="4" opacity="0">
+  <animate attributeName="r" values="0; 0; 0; 0; 60; 120; 180" dur="6s" fill="freeze"/>
+  <animate attributeName="opacity" values="0; 0; 0; 0; 1; 0.5; 0" dur="6s" fill="freeze"/>
+</circle>
+
+<!-- Legend -->
+<circle cx="50" cy="400" r="10" fill="red" stroke="black" stroke-width="1"/>
+<text x="70" y="405" font-size="12" fill="black">= Proton (+)</text>
+
+<circle cx="170" cy="400" r="10" fill="gray" stroke="black" stroke-width="1"/>
+<text x="190" y="405" font-size="12" fill="black">= Neutron</text>
+
+</svg>
