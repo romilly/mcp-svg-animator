@@ -1,0 +1,71 @@
+digraph PatentDiagram {
+    rankdir=TB;
+    bgcolor="white";
+    
+    node [
+        shape=box,
+        style="filled",
+        fillcolor="white",
+        color="black",
+        fontcolor="black",
+        fontname="Helvetica"
+    ];
+    
+    edge [
+        color="black"
+    ];
+    
+    subgraph cluster_inputs {
+        label="Inputs";
+        fontname="Helvetica";
+        color="black";
+        style="solid";
+        
+        photo [label="Photo"];
+        drawing [label="Drawing"];
+        text [label="Typed Text"];
+        speech [label="Spoken Input"];
+    }
+    
+    subgraph cluster_processing {
+        label="Processing";
+        fontname="Helvetica";
+        color="black";
+        style="solid";
+        
+        input_mod [label="Input Module"];
+        ai_interp [label="AI Interpretation Module"];
+        dsl_gen [label="DSL Generator"];
+        validation [label="Validation Module"];
+        anim_gen [label="Animation Generator"];
+        video_render [label="Video Renderer"];
+        output_mod [label="Output Module"];
+    }
+    
+    subgraph cluster_outputs {
+        label="Outputs";
+        fontname="Helvetica";
+        color="black";
+        style="solid";
+        
+        image [label="Image"];
+        video [label="Video"];
+    }
+    
+    photo -> input_mod;
+    drawing -> input_mod;
+    text -> input_mod;
+    speech -> input_mod;
+    
+    input_mod -> ai_interp;
+    ai_interp -> dsl_gen;
+    dsl_gen -> validation;
+    validation -> anim_gen;
+    anim_gen -> video_render;
+    video_render -> output_mod;
+    
+    output_mod -> image;
+    output_mod -> video;
+    
+    validation -> dsl_gen [style="dashed", constraint=false];
+}

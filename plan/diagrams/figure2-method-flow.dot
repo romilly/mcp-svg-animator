@@ -1,0 +1,38 @@
+digraph MethodFlow {
+    rankdir=LR;
+    bgcolor="white";
+    
+    node [
+        shape=box,
+        style="filled",
+        fillcolor="white",
+        color="black",
+        fontcolor="black",
+        fontname="Helvetica"
+    ];
+    
+    edge [
+        color="black"
+    ];
+    
+    input [label="Input\nReception"];
+    preprocess [label="Preprocessing"];
+    ai [label="AI\nAnalysis"];
+    dsl [label="DSL\nGeneration"];
+    validation [label="Validation"];
+    animation [label="Animation\nRendering"];
+    video [label="Video\nEncoding"];
+    audio [label="Audio\nSynthesis\n(Optional)"];
+    output [label="Output\nDelivery"];
+    
+    input -> preprocess;
+    preprocess -> ai;
+    ai -> dsl;
+    dsl -> validation;
+    validation -> animation;
+    animation -> video;
+    video -> audio;
+    audio -> output;
+    
+    validation -> dsl [style="dashed", constraint=false, label="Invalid"];
+}

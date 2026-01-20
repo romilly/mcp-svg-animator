@@ -1,0 +1,45 @@
+digraph DSLStructure {
+    rankdir=LR;
+    bgcolor="white";
+    
+    node [
+        shape=box,
+        style="filled",
+        fillcolor="white",
+        color="black",
+        fontcolor="black",
+        fontname="Helvetica"
+    ];
+    
+    edge [
+        color="black"
+    ];
+    
+    root [label="Animation\nSpecification"];
+    
+    canvas [label="Canvas/Scene\nProperties"];
+    objects [label="Object\nDefinitions"];
+    timeline [label="Timeline"];
+    audio [label="Audio\nSynchronization\n(Optional)"];
+    
+    obj1 [label="Object 1\n(properties)"];
+    obj2 [label="Object 2\n(properties)"];
+    objn [label="Object N\n(properties)"];
+    
+    kf1 [label="Keyframe 1"];
+    kf2 [label="Keyframe 2"];
+    kfn [label="Keyframe N"];
+    
+    root -> canvas;
+    root -> objects;
+    root -> timeline;
+    root -> audio;
+    
+    objects -> obj1;
+    objects -> obj2;
+    objects -> objn;
+    
+    timeline -> kf1;
+    timeline -> kf2;
+    timeline -> kfn;
+}

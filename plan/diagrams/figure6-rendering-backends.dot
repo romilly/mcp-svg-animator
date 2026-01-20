@@ -1,0 +1,37 @@
+digraph RenderingBackends {
+    rankdir=LR;
+    bgcolor="white";
+    
+    node [
+        shape=box,
+        style="filled",
+        fillcolor="white",
+        color="black",
+        fontcolor="black",
+        fontname="Helvetica"
+    ];
+    
+    edge [
+        color="black"
+    ];
+    
+    dsl [label="DSL\nSpecification"];
+    
+    selector [label="Renderer\nSelector"];
+    
+    render_2d [label="2D Vector\nRenderer"];
+    render_math [label="Mathematical\nRenderer"];
+    render_3d [label="3D\nRenderer"];
+    
+    video [label="Video\nOutput"];
+    
+    dsl -> selector;
+    
+    selector -> render_2d;
+    selector -> render_math;
+    selector -> render_3d;
+    
+    render_2d -> video;
+    render_math -> video;
+    render_3d -> video;
+}

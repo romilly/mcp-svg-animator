@@ -1,0 +1,39 @@
+flowchart TD
+    subgraph Inputs
+        photo[Photo]
+        drawing[Drawing]
+        text[Typed Text]
+        speech[Spoken Input]
+    end
+
+    subgraph Processing
+        input_mod[Input Module]
+        ai_interp[AI Interpretation Module]
+        dsl_gen[DSL Generator]
+        validation[Validation Module]
+        anim_gen[Animation Generator]
+        video_render[Video Renderer]
+        output_mod[Output Module]
+    end
+
+    subgraph Outputs
+        image[Image]
+        video[Video]
+    end
+
+    photo --> input_mod
+    drawing --> input_mod
+    text --> input_mod
+    speech --> input_mod
+
+    input_mod --> ai_interp
+    ai_interp --> dsl_gen
+    dsl_gen --> validation
+    validation --> anim_gen
+    anim_gen --> video_render
+    video_render --> output_mod
+
+    output_mod --> image
+    output_mod --> video
+
+    validation -.-> dsl_gen
