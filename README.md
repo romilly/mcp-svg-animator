@@ -37,7 +37,7 @@ Register the MCP server globally:
 claude mcp add --scope user svg-animator -- /path/to/venv/bin/python -m mcp_svg_animator
 ```
 
-Then in any Claude Code session, ask Claude to create animations:
+Then in any Claude Code session, **ask Claude code to create animations**:
 
 > "Create an animated SVG of a red circle that pulses"
 
