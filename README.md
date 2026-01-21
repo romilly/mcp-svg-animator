@@ -6,7 +6,7 @@ You can create a diagram from text input, photos of sketches and YAML specificat
 You don't normally need to use YAML; just tell Claude code what you want, upload photos of sketches,
 and then iterate until you've got what you want.
 
-You can see some sample inputs and outputs on the [Demo Page](examples/demo.html)
+You can see some sample inputs and outputs on the [Demo Page](https://htmlpreview.github.io/?https://github.com/romilly/mcp-svg-animator/blob/main/examples/demo.html)
 
 ## Features
 
