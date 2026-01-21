@@ -1,5 +1,5 @@
 digraph PatentDiagram {
-    rankdir=TB;
+    rankdir=LR;
     bgcolor="white";
     
     node [
