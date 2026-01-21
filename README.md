@@ -10,7 +10,7 @@ You can see some sample inputs and outputs on the [Demo Page](https://htmlprevie
 
 ## Features
 
-- **YAML-based specification** - Define diagrams in readable YAML
+- **Create and iterate on your requirements** using natural language and/or rough  diagrams
 - **Multiple shape types** - circle, rectangle, line, text, path, group
 - **Path segments** - Build curves with move_to, line_to, cubic_bezier, quadratic_bezier, arc
 - **SMIL animations** - Animate attributes and transforms
@@ -50,41 +50,6 @@ Then in any Claude Code session, **ask Claude code to create animations**:
 > "Create an animated SVG of a red circle that pulses"
 
 See [docs/usage.md](docs/usage.md) for more details.
-
-## YAML Example
-
-```yaml
-width: 400
-height: 300
-
-definitions:
-  person:
-    type: group
-    elements:
-      - type: circle
-        cx: 0
-        cy: 0
-        r: 20
-        stroke: black
-        fill: none
-
-elements:
-  - use: person
-    id: person1
-    transform: translate(80, 120)
-    transform_animations:
-      - type: translate
-        from: "80 120"
-        to: "250 120"
-        dur: 3s
-        repeatCount: indefinite
-
-  - use: person
-    id: person2
-    transform: translate(320, 120)
-```
-
-See [docs/specification.md](docs/specification.md) for the complete YAML format reference.
 
 ## MCP Tools
 
