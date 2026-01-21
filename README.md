@@ -22,6 +22,14 @@ You can see some sample inputs and outputs on the [Demo Page](https://htmlprevie
 ## Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/romilly/mcp-svg-animator.git
+cd mcp-svg-animator
+
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install dependencies
 pip install -r requirements.txt
 
@@ -91,12 +99,7 @@ and it will invoke the relevant tools.
 ## Development
 
 ```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+# Install test dependencies (after following Installation steps above)
 pip install -r requirements-test.txt
 
 # Run tests
