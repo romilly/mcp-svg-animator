@@ -3,10 +3,10 @@
 An MCP server for creating animated SVG diagrams.
 You can create a diagram from text input, photos of sketches and YAML specifications.
 
-YOu don't normally need to use YAML; just tell Claude code what you want, upload photos of sketches,
+You don't normally need to use YAML; just tell Claude code what you want, upload photos of sketches,
 and then iterate until you've got what you want.
 
-YOu can see some sample inputs and outtputs on the [Demo Page](examples/demo.html)
+You can see some sample inputs and outputs on the [Demo Page](examples/demo.html)
 
 ## Features
 
@@ -79,6 +79,9 @@ elements:
 See [docs/specification.md](docs/specification.md) for the complete YAML format reference.
 
 ## MCP Tools
+
+You don't need to explicitly invoke these. Ask Claude code to create the animation you describe,
+and it will invoke the relevant tools.
 
 | Tool | Description |
 |------|-------------|
