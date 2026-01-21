@@ -1,6 +1,12 @@
 # MCP SVG Animator
 
-An MCP server for creating animated SVG diagrams from YAML specifications.
+An MCP server for creating animated SVG diagrams.
+You can create a diagram from text input, photos of sketches and YAML specifications.
+
+YOu don't normally need to use YAML; just tell Claude code what you want, upload photos of sketches,
+and then iterate until you've got what you want.
+
+YOu can see some sample inputs and outtputs on the [Demo Page](examples/demo.html)
 
 ## Features
 
