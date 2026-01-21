@@ -84,6 +84,16 @@ See the `examples/` directory for sample YAML files and generated SVGs:
 - `curves.yaml` - Bezier curves and arcs
 - `meeting.yaml` - Two figures, one walks to meet the other
 
+## Acknowledgments
+
+This project uses the following open source packages:
+
+- [MCP](https://github.com/modelcontextprotocol/python-sdk) - Model Context Protocol SDK (MIT)
+- [Pydantic](https://github.com/pydantic/pydantic) - Data validation (MIT)
+- [drawsvg](https://github.com/cduck/drawsvg) - SVG generation (MIT)
+- [PyYAML](https://github.com/yaml/pyyaml) - YAML parsing (MIT)
+- [Playwright](https://github.com/microsoft/playwright-python) - Video recording (Apache 2.0)
+
 ## License
 
 MIT
