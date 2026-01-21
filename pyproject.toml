@@ -27,12 +27,14 @@ dependencies = []
 test = [
     "pytest>=7.0.0",
     "pytest-cov",
+    "pyright",
+    "PyHamcrest",
 ]
 
 [project.urls]
-Homepage = "https://github.com/username/mcp-svg-animator"
-Repository = "https://github.com/username/mcp-svg-animator.git"
-Issues = "https://github.com/username/mcp-svg-animator/issues"
+Homepage = "https://github.com/romilly/mcp-svg-animator"
+Repository = "https://github.com/romilly/mcp-svg-animator.git"
+Issues = "https://github.com/romilly/mcp-svg-animator/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
