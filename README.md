@@ -22,16 +22,7 @@ You can see some sample inputs and outputs on the [Demo Page](https://htmlprevie
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/romilly/mcp-svg-animator.git
-cd mcp-svg-animator
-
-# Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+pip install mcp-svg-animator
 
 # Install Playwright browsers (for video generation)
 playwright install chromium
@@ -42,7 +33,7 @@ playwright install chromium
 Register the MCP server globally:
 
 ```bash
-claude mcp add --scope user svg-animator -- /path/to/venv/bin/python -m mcp_svg_animator
+claude mcp add --scope user svg-animator -- python -m mcp_svg_animator
 ```
 
 Then in any Claude Code session, **ask Claude code to create animations**:
@@ -64,8 +55,20 @@ and it will invoke the relevant tools.
 ## Development
 
 ```bash
-# Install test dependencies (after following Installation steps above)
+# Clone the repository
+git clone https://github.com/romilly/mcp-svg-animator.git
+cd mcp-svg-animator
+
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
 pip install -r requirements-test.txt
+
+# Install Playwright browsers (for video generation)
+playwright install chromium
 
 # Run tests
 pytest
