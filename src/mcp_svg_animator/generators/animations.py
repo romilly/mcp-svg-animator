@@ -7,6 +7,8 @@ import drawsvg as draw
 from .position_resolver import resolve_positions
 from .specs.animation_spec import AnimationSpec
 from .specs.circle_spec import CircleSpec
+from .specs.element_spec import ElementSpec
+from .specs.ellipse_spec import EllipseSpec
 from .specs.group_spec import GroupSpec
 from .specs.line_spec import LineSpec
 from .specs.path_spec import PathSpec
@@ -44,33 +46,47 @@ def create_animated_diagram(arguments: dict) -> str:
     return cast(str, d.as_svg())
 
 
+def _build_common_kwargs(spec: ElementSpec) -> dict:
+    """Build kwargs dict for common SVG attributes."""
+    kwargs: dict = {
+        "fill": spec.fill,
+        "stroke": spec.stroke,
+        "stroke_width": spec.stroke_width,
+    }
+    if spec.transform:
+        kwargs["transform"] = spec.transform
+    if spec.opacity is not None:
+        kwargs["opacity"] = spec.opacity
+    if spec.stroke_dasharray:
+        kwargs["stroke_dasharray"] = spec.stroke_dasharray
+    if spec.stroke_linecap:
+        kwargs["stroke_linecap"] = spec.stroke_linecap
+    if spec.stroke_linejoin:
+        kwargs["stroke_linejoin"] = spec.stroke_linejoin
+    if spec.fill_opacity is not None:
+        kwargs["fill_opacity"] = spec.fill_opacity
+    if spec.stroke_opacity is not None:
+        kwargs["stroke_opacity"] = spec.stroke_opacity
+    return kwargs
+
+
 def _create_circle(spec: CircleSpec):
-    return draw.Circle(
-        spec.cx,
-        spec.cy,
-        spec.r,
-        fill=spec.fill,
-        stroke=spec.stroke,
-        stroke_width=spec.stroke_width,
-    )
+    kwargs = _build_common_kwargs(spec)
+    return draw.Circle(spec.cx, spec.cy, spec.r, **kwargs)
+
+
+def _create_ellipse(spec: EllipseSpec):
+    kwargs = _build_common_kwargs(spec)
+    return draw.Ellipse(spec.cx, spec.cy, spec.rx, spec.ry, **kwargs)  # type: ignore[attr-defined]
 
 
 def _create_rectangle(spec: RectangleSpec):
-    kwargs: dict[str, float] = {}
+    kwargs = _build_common_kwargs(spec)
     if spec.rx is not None:
         kwargs["rx"] = spec.rx
     if spec.ry is not None:
         kwargs["ry"] = spec.ry
-    return draw.Rectangle(
-        spec.x,
-        spec.y,
-        spec.width,
-        spec.height,
-        fill=spec.fill,
-        stroke=spec.stroke,
-        stroke_width=spec.stroke_width,
-        **kwargs,
-    )
+    return draw.Rectangle(spec.x, spec.y, spec.width, spec.height, **kwargs)
 
 
 def _create_arrow_marker(color: str = "black"):
@@ -81,45 +97,37 @@ def _create_arrow_marker(color: str = "black"):
 
 
 def _create_line(spec: LineSpec):
-    kwargs = {}
+    kwargs = _build_common_kwargs(spec)
+    # Line doesn't use fill
+    del kwargs["fill"]
     if spec.marker_end == "arrow":
         kwargs["marker_end"] = _create_arrow_marker(spec.stroke)
-    return draw.Line(
-        spec.x1,
-        spec.y1,
-        spec.x2,
-        spec.y2,
-        stroke=spec.stroke,
-        stroke_width=spec.stroke_width,
-        **kwargs,
-    )
+    return draw.Line(spec.x1, spec.y1, spec.x2, spec.y2, **kwargs)
 
 
 def _create_text(spec: TextSpec):
-    kwargs: dict[str, str] = {}
+    kwargs: dict = {"fill": spec.fill}
     if spec.text_anchor:
         kwargs["text_anchor"] = spec.text_anchor
-    return draw.Text(
-        spec.text,
-        spec.font_size,
-        spec.x,
-        spec.y,
-        fill=spec.fill,
-        **kwargs,
-    )
+    if spec.font_family:
+        kwargs["font_family"] = spec.font_family
+    if spec.font_weight:
+        kwargs["font_weight"] = spec.font_weight
+    if spec.font_style:
+        kwargs["font_style"] = spec.font_style
+    if spec.dominant_baseline:
+        kwargs["dominant_baseline"] = spec.dominant_baseline
+    return draw.Text(spec.text, spec.font_size, spec.x, spec.y, **kwargs)
 
 
 def _create_path(spec: PathSpec):
-    return draw.Path(
-        d=spec.get_path_data(),
-        fill=spec.fill,
-        stroke=spec.stroke,
-        stroke_width=spec.stroke_width,
-    )
+    kwargs = _build_common_kwargs(spec)
+    return draw.Path(d=spec.get_path_data(), **kwargs)
 
 
 _ELEMENT_CREATORS = {
     "circle": (CircleSpec, _create_circle),
+    "ellipse": (EllipseSpec, _create_ellipse),
     "rectangle": (RectangleSpec, _create_rectangle),
     "line": (LineSpec, _create_line),
     "text": (TextSpec, _create_text),

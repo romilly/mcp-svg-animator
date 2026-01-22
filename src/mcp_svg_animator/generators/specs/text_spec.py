@@ -2,22 +2,25 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
-from .animation_spec import AnimationSpec
+from .element_spec import ElementSpec
 
 
-class TextSpec(BaseModel):
+class TextSpec(ElementSpec):
     """Specification for a text element."""
 
-    id: str | None = None
     type: Literal["text"] = "text"
     text: str = ""
     font_size: float = 16
     x: float = 0
     y: float = 0
     fill: str = "black"
+    stroke: str = "none"
     text_anchor: str | None = None
-    animations: list[AnimationSpec] = Field(default_factory=list)
 
-    model_config = {"populate_by_name": True}
+    # Font-related attributes
+    font_family: str | None = Field(default=None, alias="font-family")
+    font_weight: str | None = Field(default=None, alias="font-weight")
+    font_style: str | None = Field(default=None, alias="font-style")
+    dominant_baseline: str | None = Field(default=None, alias="dominant-baseline")

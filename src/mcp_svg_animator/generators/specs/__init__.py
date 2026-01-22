@@ -3,6 +3,7 @@
 from .animation_spec import AnimationSpec
 from .circle_spec import CircleSpec
 from .element_spec import ElementSpec
+from .ellipse_spec import EllipseSpec
 from .group_spec import GroupSpec
 from .line_spec import LineSpec
 from .path_spec import PathSpec
@@ -27,6 +28,7 @@ __all__ = [
     "CloseSpec",
     "CubicBezierSpec",
     "ElementSpec",
+    "EllipseSpec",
     "GroupSpec",
     "LineSpec",
     "LineToSpec",

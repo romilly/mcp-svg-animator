@@ -2,15 +2,14 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
-from .animation_spec import AnimationSpec
+from .element_spec import ElementSpec
 
 
-class LineSpec(BaseModel):
+class LineSpec(ElementSpec):
     """Specification for a line element."""
 
-    id: str | None = None
     type: Literal["line"] = "line"
     x1: float = 0
     y1: float = 0
@@ -19,6 +18,3 @@ class LineSpec(BaseModel):
     stroke: str = "black"
     stroke_width: float = Field(default=2, alias="stroke_width")
     marker_end: str | None = None
-    animations: list[AnimationSpec] = Field(default_factory=list)
-
-    model_config = {"populate_by_name": True}

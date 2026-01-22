@@ -9,7 +9,7 @@ EXPR_PATTERN = re.compile(
 )
 
 # Attributes that can be referenced for position calculations
-POSITION_ATTRS = {"x", "y", "cx", "cy", "x1", "y1", "x2", "y2", "width", "height", "r"}
+POSITION_ATTRS = {"x", "y", "cx", "cy", "x1", "y1", "x2", "y2", "width", "height", "r", "rx", "ry"}
 
 
 def resolve_positions(elements: list[dict]) -> list[dict]:

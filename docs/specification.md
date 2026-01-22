@@ -24,6 +24,24 @@ elements:           # List of elements to render
 
 ## Element Types
 
+### Common Attributes
+
+All elements support these optional styling attributes:
+
+| Attribute | Description |
+|-----------|-------------|
+| `id` | Identifier for referencing in relative positioning |
+| `fill` | Fill color |
+| `stroke` | Stroke color |
+| `stroke_width` | Stroke width |
+| `transform` | SVG transform (e.g., "rotate(45 50 50)") |
+| `opacity` | Element opacity (0-1) |
+| `fill-opacity` | Fill opacity (0-1) |
+| `stroke-opacity` | Stroke opacity (0-1) |
+| `stroke-dasharray` | Dash pattern (e.g., "5,3") |
+| `stroke-linecap` | Line cap style: butt, round, square |
+| `stroke-linejoin` | Line join style: miter, round, bevel |
+
 ### Circle
 
 ```yaml
@@ -33,6 +51,22 @@ elements:           # List of elements to render
   cy: 100             # Center y coordinate
   r: 50               # Radius
   fill: red           # Fill color (default: blue)
+  stroke: black       # Stroke color (default: none)
+  stroke_width: 2     # Stroke width (default: 0)
+  opacity: 0.8        # Optional: element opacity
+  transform: rotate(45 100 100)  # Optional: transform
+```
+
+### Ellipse
+
+```yaml
+- type: ellipse
+  id: my_ellipse
+  cx: 100             # Center x coordinate
+  cy: 100             # Center y coordinate
+  rx: 50              # Horizontal radius (default: 50)
+  ry: 25              # Vertical radius (default: 25)
+  fill: white         # Fill color (default: blue)
   stroke: black       # Stroke color (default: none)
   stroke_width: 2     # Stroke width (default: 0)
 ```
@@ -64,6 +98,8 @@ elements:           # List of elements to render
   stroke: black       # Stroke color (default: black)
   stroke_width: 2     # Stroke width (default: 2)
   marker_end: arrow   # Add arrowhead at end (optional)
+  stroke-dasharray: "5,3"   # Dashed line pattern (optional)
+  stroke-linecap: round     # Line cap style (optional)
 ```
 
 ### Text
@@ -76,6 +112,10 @@ elements:           # List of elements to render
   font_size: 24       # Font size (default: 16)
   fill: black         # Text color (default: black)
   text_anchor: middle # Alignment: start, middle, end (optional)
+  font-family: "Arial, sans-serif"  # Font family (optional)
+  font-weight: bold   # Font weight: normal, bold, etc. (optional)
+  font-style: italic  # Font style: normal, italic, oblique (optional)
+  dominant-baseline: middle  # Vertical alignment (optional)
 ```
 
 ### Path
@@ -274,7 +314,7 @@ elements:
     height: 50
 ```
 
-Supported attributes: `x`, `y`, `cx`, `cy`, `x1`, `y1`, `x2`, `y2`, `width`, `height`, `r`
+Supported attributes: `x`, `y`, `cx`, `cy`, `x1`, `y1`, `x2`, `y2`, `width`, `height`, `r`, `rx`, `ry`
 
 ## Video Generation
 
