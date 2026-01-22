@@ -117,6 +117,8 @@ def _create_text(spec: TextSpec):
         kwargs["font_style"] = spec.font_style
     if spec.dominant_baseline:
         kwargs["dominant_baseline"] = spec.dominant_baseline
+    if spec.transform:
+        kwargs["transform"] = spec.transform
     return draw.Text(spec.text, spec.font_size, spec.x, spec.y, **kwargs)
 
 

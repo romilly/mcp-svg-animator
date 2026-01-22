@@ -12,12 +12,12 @@ class TextSpec(ElementSpec):
 
     type: Literal["text"] = "text"
     text: str = ""
-    font_size: float = 16
+    font_size: float = Field(default=16, alias="font-size")
     x: float = 0
     y: float = 0
     fill: str = "black"
     stroke: str = "none"
-    text_anchor: str | None = None
+    text_anchor: str | None = Field(default=None, alias="text-anchor")
 
     # Font-related attributes
     font_family: str | None = Field(default=None, alias="font-family")

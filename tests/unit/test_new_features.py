@@ -249,3 +249,84 @@ class TestStrokeLinecapLinejoin:
         })
 
         assert_that(result, contains_string('stroke-linejoin="round"'))
+
+
+class TestHyphenatedAttributeAliases:
+    """Tests for hyphenated YAML attribute names."""
+
+    def test_ellipse_with_hyphenated_stroke_width(self):
+        """stroke-width in YAML should work for ellipse."""
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "ellipse",
+                "cx": 100,
+                "cy": 100,
+                "rx": 50,
+                "ry": 25,
+                "stroke": "#333",
+                "stroke-width": 2,
+            }]
+        })
+
+        # SVG may render as "2" or "2.0"
+        assert 'stroke-width="2"' in result or 'stroke-width="2.0"' in result
+
+    def test_text_with_hyphenated_font_size(self):
+        """font-size in YAML should work."""
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "text",
+                "x": 50,
+                "y": 50,
+                "text": "Large",
+                "font-size": 24,
+            }]
+        })
+
+        # SVG may render as "24" or "24.0"
+        assert 'font-size="24"' in result or 'font-size="24.0"' in result
+
+    def test_text_with_hyphenated_text_anchor(self):
+        """text-anchor in YAML should work."""
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "text",
+                "x": 100,
+                "y": 50,
+                "text": "Centered",
+                "text-anchor": "middle",
+            }]
+        })
+
+        assert_that(result, contains_string('text-anchor="middle"'))
+
+    def test_text_with_transform(self):
+        """transform should be passed through for text elements."""
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "text",
+                "x": 100,
+                "y": 100,
+                "text": "Rotated",
+                "transform": "rotate(45, 100, 100)",
+            }]
+        })
+
+        assert_that(result, contains_string('transform="rotate(45, 100, 100)"'))
+
+    def test_rectangle_with_hyphenated_stroke_width(self):
+        """stroke-width in YAML should work for rectangle."""
+        result = create_animated_diagram({
+            "elements": [{
+                "type": "rectangle",
+                "x": 10,
+                "y": 10,
+                "width": 100,
+                "height": 50,
+                "stroke": "black",
+                "stroke-width": 3,
+            }]
+        })
+
+        # SVG may render as "3" or "3.0"
+        assert 'stroke-width="3"' in result or 'stroke-width="3.0"' in result

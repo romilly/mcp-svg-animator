@@ -11,7 +11,7 @@ class ElementSpec(BaseModel):
     id: str | None = None
     fill: str = "blue"
     stroke: str = "none"
-    stroke_width: float = Field(default=0, alias="stroke_width")
+    stroke_width: float = Field(default=0, alias="stroke-width")
     animations: list[AnimationSpec] = Field(default_factory=list)
 
     # Common styling attributes
