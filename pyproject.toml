@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcp-svg-animator"
-version = "0.1.0"
+version = "0.2.0"
 description = "An MCP server for creating svg animations."
-authors = [{name = "Author Name", email = "author@example.com"}]
+authors = [{name = "Romilly Cocking", email = "romilly.cocking@gmail.com"}]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
