@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcp-svg-animator"
-version = "0.2.1"
+version = "0.3.0"
 description = "An MCP server for creating svg animations."
 authors = [{name = "Romilly Cocking", email = "romilly.cocking@gmail.com"}]
 license = "MIT"
