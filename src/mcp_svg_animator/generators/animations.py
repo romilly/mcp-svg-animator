@@ -15,6 +15,7 @@ from .specs.path_spec import PathSpec
 from .specs.rectangle_spec import RectangleSpec
 from .specs.text_spec import TextSpec
 from .specs.transform_animation_spec import TransformAnimationSpec
+from .specs.connection_spec import ConnectionSpec
 
 
 def create_animated_diagram(arguments: dict) -> str:
@@ -119,12 +120,68 @@ def _create_text(spec: TextSpec):
         kwargs["dominant_baseline"] = spec.dominant_baseline
     if spec.transform:
         kwargs["transform"] = spec.transform
-    return draw.Text(spec.text, spec.font_size, spec.x, spec.y, **kwargs)
+
+    text_element = draw.Text(spec.text, spec.font_size, spec.x, spec.y, **kwargs)
+
+    # If background is specified, wrap text in a group with a background rect
+    if spec.background:
+        group = draw.Group()
+
+        # Create background rectangle
+        # Approximate text dimensions based on font size and text length
+        padding = spec.background_padding
+        char_width = spec.font_size * 0.6  # Approximate character width
+        text_width = len(spec.text) * char_width
+        text_height = spec.font_size
+
+        # Position rect behind text (text y is baseline, rect needs top-left)
+        rect_x = spec.x - padding
+        rect_y = spec.y - text_height + padding / 2
+        rect_width = text_width + 2 * padding
+        rect_height = text_height + padding
+
+        background_rect = draw.Rectangle(
+            rect_x, rect_y, rect_width, rect_height,
+            fill=spec.background, stroke="none"
+        )
+        group.append(background_rect)
+        group.append(text_element)
+        return group
+
+    return text_element
 
 
 def _create_path(spec: PathSpec):
     kwargs = _build_common_kwargs(spec)
     return draw.Path(d=spec.get_path_data(), **kwargs)
+
+
+def _create_connection(spec: ConnectionSpec, resolved_dict: dict):
+    """Create a connection element as a line between two elements.
+
+    The resolved_dict contains x1, y1, x2, y2 coordinates calculated
+    by resolve_positions from the centers of the from/to elements.
+    """
+    kwargs: dict = {
+        "stroke": spec.stroke,
+        "stroke_width": spec.stroke_width,
+    }
+    if spec.opacity is not None:
+        kwargs["opacity"] = spec.opacity
+    if spec.stroke_dasharray:
+        kwargs["stroke_dasharray"] = spec.stroke_dasharray
+    if spec.stroke_linecap:
+        kwargs["stroke_linecap"] = spec.stroke_linecap
+    if spec.marker_end == "arrow":
+        kwargs["marker_end"] = _create_arrow_marker(spec.stroke)
+
+    # Use coordinates from resolved dict (added by resolve_positions)
+    x1 = resolved_dict["x1"]
+    y1 = resolved_dict["y1"]
+    x2 = resolved_dict["x2"]
+    y2 = resolved_dict["y2"]
+
+    return draw.Line(x1, y1, x2, y2, **kwargs)
 
 
 _ELEMENT_CREATORS = {
@@ -200,6 +257,14 @@ def _create_element(spec_dict: dict):
     if element_type == "group":
         spec = GroupSpec.model_validate(spec_dict)
         return _create_group(spec)
+
+    # Handle connections specially - they need the resolved dict for coordinates
+    if element_type == "connection":
+        spec = ConnectionSpec.model_validate(spec_dict)
+        element = _create_connection(spec, spec_dict)
+        if spec.animations:
+            _apply_animations(element, spec.animations)
+        return element
 
     creator_info = _ELEMENT_CREATORS.get(element_type)
     if creator_info is None:

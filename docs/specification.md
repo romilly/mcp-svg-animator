@@ -102,6 +102,27 @@ All elements support these optional styling attributes:
   stroke-linecap: round     # Line cap style (optional)
 ```
 
+### Connection
+
+Connections draw lines between the centers of two referenced elements. Elements can be defined in any order - connections are resolved after all other elements are processed.
+
+```yaml
+- type: connection
+  from: box1           # ID of source element
+  to: box2             # ID of target element
+  stroke: black        # Stroke color (default: black)
+  stroke-width: 2      # Stroke width (default: 2)
+  marker-end: arrow    # Add arrowhead at end (optional)
+  stroke-dasharray: "5,3"   # Dashed line pattern (optional)
+```
+
+**Supported element types for connections:**
+- `circle`, `ellipse`: Uses cx, cy as center
+- `rectangle`: Uses x + width/2, y + height/2 as center
+- `text`: Uses x, y as center
+
+Connections are rendered first (behind other elements) regardless of their position in the elements list.
+
 ### Text
 
 ```yaml
@@ -116,7 +137,11 @@ All elements support these optional styling attributes:
   font-weight: bold   # Font weight: normal, bold, etc. (optional)
   font-style: italic  # Font style: normal, italic, oblique (optional)
   dominant-baseline: middle  # Vertical alignment (optional)
+  background: white   # Background panel color (optional)
+  background-padding: 4  # Padding around text (default: 4)
 ```
+
+When `background` is specified, the text is wrapped in a group with a rectangle behind it.
 
 ### Path
 

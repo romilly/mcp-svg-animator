@@ -2,6 +2,7 @@
 
 from .animation_spec import AnimationSpec
 from .circle_spec import CircleSpec
+from .connection_spec import ConnectionSpec
 from .element_spec import ElementSpec
 from .ellipse_spec import EllipseSpec
 from .group_spec import GroupSpec
@@ -26,6 +27,7 @@ __all__ = [
     "ArcSpec",
     "CircleSpec",
     "CloseSpec",
+    "ConnectionSpec",
     "CubicBezierSpec",
     "ElementSpec",
     "EllipseSpec",

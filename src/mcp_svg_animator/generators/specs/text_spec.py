@@ -24,3 +24,7 @@ class TextSpec(ElementSpec):
     font_weight: str | None = Field(default=None, alias="font-weight")
     font_style: str | None = Field(default=None, alias="font-style")
     dominant_baseline: str | None = Field(default=None, alias="dominant-baseline")
+
+    # Background panel
+    background: str | None = None
+    background_padding: float = Field(default=4, alias="background-padding")
