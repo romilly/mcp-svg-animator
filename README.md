@@ -33,6 +33,8 @@ Files in subdirectories of allowed paths are also permitted.
 
 - **Create and iterate on your requirements** using natural language and/or rough diagrams
 - **Multiple shape types** - circle, rectangle, line, text, path, ellipse, group
+- **Connection elements** - Draw lines between element centers with automatic positioning
+- **Text backgrounds** - Auto-generate background panels behind text labels
 - **Path segments** - Build curves with move_to, line_to, cubic_bezier, quadratic_bezier, arc
 - **SMIL animations** - Animate attributes and transforms
 - **Reusable definitions** - Define once, use many times
@@ -109,6 +111,8 @@ See the `examples/` directory for sample YAML files and generated SVGs:
 - `stick_figure_waving.yaml` - Animated waving
 - `curves.yaml` - Bezier curves and arcs
 - `meeting.yaml` - Two figures, one walks to meet the other
+- `connection_demo.svg` - Architecture diagram using connection elements
+- `balloon_friends.svg` - Animated stick figures with stretching line
 
 ## Acknowledgments
 
