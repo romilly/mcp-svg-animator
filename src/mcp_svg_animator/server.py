@@ -58,6 +58,10 @@ elements:
                         "type": "string",
                         "description": "Optional path to write the SVG file. If provided, writes to file and returns confirmation instead of SVG content.",
                     },
+                    "png_path": {
+                        "type": "string",
+                        "description": "Optional path to write a PNG render of the SVG. Useful for previewing static images.",
+                    },
                 },
                 "required": ["yaml_spec"],
             },
@@ -105,11 +109,26 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
 
         yaml_spec = arguments.get("yaml_spec", "")
         output_path = arguments.get("output_path")
+        png_path = arguments.get("png_path")
         svg_content = create_diagram_from_yaml(yaml_spec)
+
+        messages = []
 
         if output_path:
             Path(output_path).write_text(svg_content)
-            return [TextContent(type="text", text=f"SVG written to {output_path}")]
+            messages.append(f"SVG written to {output_path}")
+
+        if png_path:
+            import asyncio
+
+            from .generators.png_generator import create_png_from_svg
+
+            # Run sync Playwright code in a separate thread to avoid async conflict
+            await asyncio.to_thread(create_png_from_svg, svg_content, png_path)
+            messages.append(f"PNG written to {png_path}")
+
+        if messages:
+            return [TextContent(type="text", text="\n".join(messages))]
 
         return [TextContent(type="text", text=svg_content)]
 
