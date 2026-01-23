@@ -8,9 +8,26 @@ and then iterate until you've got what you want.
 
 You can see some sample inputs and outputs on the [Demo Page](https://htmlpreview.github.io/?https://github.com/romilly/mcp-svg-animator/blob/main/examples/demo.html)
 
-## Security Warning
+## File Output Configuration
 
-The MCP server can currently write files to arbitrary locations on your filesystem when using the `output_path` or `png_path` parameters. Use with caution and only in trusted environments.
+By default, the MCP server does not allow writing files to your filesystem. To enable file output (SVG, PNG, or video), create a configuration file at `~/.config/mcp-svg-animator/config.yaml`:
+
+```yaml
+file_output:
+  allowed:
+    - path: "~/diagrams"
+      types: [svg, png, webm]
+    - path: "/tmp/svg-animator/**"
+      types: [svg, png]
+    - path: "~/projects/**/output"
+      types: [svg, png, webm]
+```
+
+**Configuration options:**
+- `path`: Directory where files can be written. Supports `~` expansion and glob patterns (`*` for single level, `**` for recursive).
+- `types`: List of allowed file types (`svg`, `png`, `webm`).
+
+Files in subdirectories of allowed paths are also permitted.
 
 ## Features
 

@@ -99,6 +99,17 @@ Example usage:
     ]
 
 
+def _check_write_permission(file_path: str, file_type: str) -> None:
+    """Check if writing to a path is allowed, raise PermissionError if not."""
+    from .config import is_path_allowed
+
+    if not is_path_allowed(file_path, file_type):
+        raise PermissionError(
+            f"Writing {file_type} to {file_path} is not allowed. "
+            f"Configure allowed paths in ~/.config/mcp-svg-animator/config.yaml"
+        )
+
+
 @server.call_tool()
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
     """Handle tool calls for SVG generation."""
@@ -110,6 +121,13 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
         yaml_spec = arguments.get("yaml_spec", "")
         output_path = arguments.get("output_path")
         png_path = arguments.get("png_path")
+
+        # Check permissions before generating content
+        if output_path:
+            _check_write_permission(output_path, "svg")
+        if png_path:
+            _check_write_permission(png_path, "png")
+
         svg_content = create_diagram_from_yaml(yaml_spec)
 
         messages = []
@@ -134,11 +152,14 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
 
     if name == "create_animation_video":
         import asyncio
+
         from .generators.video_generator import create_video_from_svg
 
         svg_content = arguments.get("svg_content", "")
         output_path = arguments.get("output_path", "animation.webm")
         duration_ms = int(arguments.get("duration_ms", 3000))
+
+        _check_write_permission(output_path, "webm")
 
         # Run sync Playwright code in a separate thread to avoid async conflict
         await asyncio.to_thread(

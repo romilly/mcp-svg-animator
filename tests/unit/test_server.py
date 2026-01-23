@@ -3,9 +3,33 @@
 import asyncio
 from pathlib import Path
 
+import pytest
 from hamcrest import assert_that, contains_string, is_not
 
+from mcp_svg_animator.config import clear_config_cache
 from mcp_svg_animator.server import call_tool
+
+
+@pytest.fixture(autouse=True)
+def reset_config(tmp_path: Path, monkeypatch):
+    """Set up config to allow writing to tmp_path for all tests."""
+    import os
+
+    clear_config_cache()
+    # Preserve original home for Playwright browser cache
+    original_home = os.environ.get("HOME", "")
+    monkeypatch.setenv("PLAYWRIGHT_BROWSERS_PATH", f"{original_home}/.cache/ms-playwright")
+    monkeypatch.setenv("HOME", str(tmp_path))
+    config_dir = tmp_path / ".config" / "mcp-svg-animator"
+    config_dir.mkdir(parents=True)
+    (config_dir / "config.yaml").write_text(f"""
+file_output:
+  allowed:
+    - path: "{tmp_path}"
+      types: [svg, png, webm]
+""")
+    yield
+    clear_config_cache()
 
 
 class TestCreateSvgFromYamlWithOutputPath:
@@ -162,3 +186,92 @@ elements:
         response_text = result[0].text
         assert_that(response_text, contains_string(str(svg_file)))
         assert_that(response_text, contains_string(str(png_file)))
+
+
+class TestFileOutputPermissions:
+    """Tests for file output permission checking."""
+
+    def test_denies_svg_write_when_not_configured(self, tmp_path: Path, monkeypatch):
+        """Writing SVG to unconfigured path raises PermissionError."""
+        # Override config to allow only a different path
+        clear_config_cache()
+        config_dir = tmp_path / ".config" / "mcp-svg-animator"
+        (config_dir / "config.yaml").write_text(f"""
+file_output:
+  allowed:
+    - path: "{tmp_path}/allowed"
+      types: [svg]
+""")
+        disallowed_file = tmp_path / "disallowed" / "output.svg"
+        yaml_spec = """
+width: 200
+height: 100
+elements:
+  - type: circle
+    cx: 50
+    cy: 50
+    r: 25
+    fill: red
+"""
+        with pytest.raises(PermissionError, match="not allowed"):
+            asyncio.run(
+                call_tool(
+                    "create_svg_from_yaml",
+                    {"yaml_spec": yaml_spec, "output_path": str(disallowed_file)},
+                )
+            )
+
+    def test_denies_png_write_when_type_not_allowed(self, tmp_path: Path, monkeypatch):
+        """Writing PNG when only SVG is allowed raises PermissionError."""
+        clear_config_cache()
+        config_dir = tmp_path / ".config" / "mcp-svg-animator"
+        (config_dir / "config.yaml").write_text(f"""
+file_output:
+  allowed:
+    - path: "{tmp_path}"
+      types: [svg]
+""")
+        png_file = tmp_path / "output.png"
+        yaml_spec = """
+width: 200
+height: 100
+elements:
+  - type: circle
+    cx: 50
+    cy: 50
+    r: 25
+    fill: red
+"""
+        with pytest.raises(PermissionError, match="not allowed"):
+            asyncio.run(
+                call_tool(
+                    "create_svg_from_yaml",
+                    {"yaml_spec": yaml_spec, "png_path": str(png_file)},
+                )
+            )
+
+    def test_denies_all_writes_when_no_config(self, tmp_path: Path, monkeypatch):
+        """With no config file, all file writes are denied."""
+        clear_config_cache()
+        # Remove the config file
+        config_file = tmp_path / ".config" / "mcp-svg-animator" / "config.yaml"
+        config_file.unlink()
+
+        output_file = tmp_path / "output.svg"
+        yaml_spec = """
+width: 200
+height: 100
+elements:
+  - type: circle
+    cx: 50
+    cy: 50
+    r: 25
+    fill: red
+"""
+        with pytest.raises(PermissionError, match="not allowed"):
+            asyncio.run(
+                call_tool(
+                    "create_svg_from_yaml",
+                    {"yaml_spec": yaml_spec, "output_path": str(output_file)},
+                )
+            )
