@@ -54,6 +54,10 @@ elements:
                         "type": "string",
                         "description": "YAML specification for the SVG diagram",
                     },
+                    "output_path": {
+                        "type": "string",
+                        "description": "Optional path to write the SVG file. If provided, writes to file and returns confirmation instead of SVG content.",
+                    },
                 },
                 "required": ["yaml_spec"],
             },
@@ -95,10 +99,18 @@ Example usage:
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
     """Handle tool calls for SVG generation."""
     if name == "create_svg_from_yaml":
+        from pathlib import Path
+
         from .generators.yaml_loader import create_diagram_from_yaml
 
         yaml_spec = arguments.get("yaml_spec", "")
+        output_path = arguments.get("output_path")
         svg_content = create_diagram_from_yaml(yaml_spec)
+
+        if output_path:
+            Path(output_path).write_text(svg_content)
+            return [TextContent(type="text", text=f"SVG written to {output_path}")]
+
         return [TextContent(type="text", text=svg_content)]
 
     if name == "create_animation_video":
