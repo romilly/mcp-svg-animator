@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="500" height="300" viewBox="0 0 500 300">
+<defs>
+<marker markerWidth="4.0" markerHeight="4.0" viewBox="-0.1 -0.5 1.0 1.0" orient="auto" id="arrow">
+<path d="M-0.1,-0.5 L-0.1,0.5 L0.9,0 Z" fill="#999" />
+</marker>
+</defs>
+<path d="M80.0,145.0 L250.0,145.0" stroke="#999" stroke-width="2.0" marker-end="url(#arrow)" />
+<path d="M250.0,145.0 L420.0,145.0" stroke="#999" stroke-width="2.0" marker-end="url(#arrow)" />
+<rect x="30.0" y="110.0" width="100.0" height="70.0" fill="#e3f2fd" stroke="#1976d2" stroke-width="2.0" rx="8.0" ry="8.0" />
+<text x="80.0" y="150.0" font-size="16" fill="#1976d2" text-anchor="middle" font-weight="bold">Client</text>
+<rect x="200.0" y="110.0" width="100.0" height="70.0" fill="#e8f5e9" stroke="#388e3c" stroke-width="2.0" rx="8.0" ry="8.0" />
+<text x="250.0" y="150.0" font-size="16" fill="#388e3c" text-anchor="middle" font-weight="bold">Server</text>
+<rect x="370.0" y="110.0" width="100.0" height="70.0" fill="#fff3e0" stroke="#f57c00" stroke-width="2.0" rx="8.0" ry="8.0" />
+<text x="420.0" y="150.0" font-size="16" fill="#f57c00" text-anchor="middle" font-weight="bold">Database</text>
+<g>
+<rect x="162.0" y="89.5" width="34.8" height="15.0" fill="#fff" stroke="none" />
+<text x="165.0" y="100.0" font-size="12.0" fill="#333" text-anchor="middle">HTTP</text>
+</g>
+<g>
+<rect x="332.0" y="89.5" width="27.599999999999998" height="15.0" fill="#fff" stroke="none" />
+<text x="335.0" y="100.0" font-size="12.0" fill="#333" text-anchor="middle">SQL</text>
+</g>
+<circle cx="130.0" cy="145.0" r="6.0" fill="#1976d2" stroke="none" stroke-width="0">
+<animate attributeName="cx" dur="2s" from="130" to="200" repeatCount="indefinite" />
+</circle>
+<circle cx="300.0" cy="145.0" r="6.0" fill="#388e3c" stroke="none" stroke-width="0">
+<animate attributeName="cx" dur="2s" from="300" to="370" repeatCount="indefinite" />
+</circle>
+<text x="250.0" y="40.0" font-size="20.0" fill="#333" text-anchor="middle" font-weight="bold">Data Flow Architecture</text>
+</svg>
