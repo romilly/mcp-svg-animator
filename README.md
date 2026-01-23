@@ -8,15 +8,21 @@ and then iterate until you've got what you want.
 
 You can see some sample inputs and outputs on the [Demo Page](https://htmlpreview.github.io/?https://github.com/romilly/mcp-svg-animator/blob/main/examples/demo.html)
 
+## Security Warning
+
+The MCP server can currently write files to arbitrary locations on your filesystem when using the `output_path` or `png_path` parameters. Use with caution and only in trusted environments.
+
 ## Features
 
-- **Create and iterate on your requirements** using natural language and/or rough  diagrams
-- **Multiple shape types** - circle, rectangle, line, text, path, group
+- **Create and iterate on your requirements** using natural language and/or rough diagrams
+- **Multiple shape types** - circle, rectangle, line, text, path, ellipse, group
 - **Path segments** - Build curves with move_to, line_to, cubic_bezier, quadratic_bezier, arc
 - **SMIL animations** - Animate attributes and transforms
 - **Reusable definitions** - Define once, use many times
 - **Library imports** - Share definitions across diagrams
 - **Relative positioning** - Reference other elements' positions
+- **Direct file output** - Write SVG directly to file, reducing token usage
+- **PNG export** - Generate PNG previews of static diagrams
 - **Video export** - Record animations to .webm video
 
 ## Installation
@@ -44,12 +50,12 @@ See [docs/usage.md](docs/usage.md) for more details.
 
 ## MCP Tools
 
-You don't need to explicitly invoke these. Ask Claude code to create the animation you describe,
+You don't need to explicitly invoke these. Ask Claude Code to create the animation you describe,
 and it will invoke the relevant tools.
 
 | Tool | Description |
 |------|-------------|
-| `create_svg_from_yaml` | Generate SVG from YAML specification |
+| `create_svg_from_yaml` | Generate SVG from YAML specification. Optional `output_path` writes SVG to file; optional `png_path` generates a PNG preview. |
 | `create_animation_video` | Record SVG animation to .webm video |
 
 ## Development
