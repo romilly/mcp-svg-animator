@@ -39,10 +39,62 @@ class TestGetElementCenter:
         assert_that(center, equal_to((200, 150)))
 
     def test_raises_error_for_unsupported_type(self):
-        element = {"type": "path", "d": "M0,0 L100,100"}
+        element = {"type": "group"}
 
-        with pytest.raises(ValueError, match="Cannot calculate center for element type: path"):
+        with pytest.raises(ValueError, match="Cannot calculate center for element type: group"):
             get_element_center(element)
+
+    def test_raises_error_for_open_path_with_segments(self):
+        element = {
+            "type": "path",
+            "segments": [
+                {"type": "move_to", "x": 0, "y": 0},
+                {"type": "line_to", "x": 100, "y": 0},
+                {"type": "line_to", "x": 100, "y": 100},
+            ]
+        }
+
+        with pytest.raises(ValueError, match="Cannot calculate center for open path"):
+            get_element_center(element)
+
+    def test_raises_error_for_open_path_with_raw_d(self):
+        element = {"type": "path", "d": "M0,0 L100,0 L100,100"}
+
+        with pytest.raises(ValueError, match="Cannot calculate center for open path"):
+            get_element_center(element)
+
+    def test_returns_centroid_for_closed_path_with_segments(self):
+        # Triangle: (0,0), (100,0), (50,100)
+        element = {
+            "type": "path",
+            "segments": [
+                {"type": "move_to", "x": 0, "y": 0},
+                {"type": "line_to", "x": 100, "y": 0},
+                {"type": "line_to", "x": 50, "y": 100},
+                {"type": "close"},
+            ]
+        }
+
+        center = get_element_center(element)
+
+        # Centroid = average of vertices: (0+100+50)/3, (0+0+100)/3
+        assert_that(center, equal_to((50.0, 100 / 3)))
+
+    def test_returns_centroid_for_closed_path_with_raw_d(self):
+        # Triangle: (0,0), (100,0), (50,100)
+        element = {"type": "path", "d": "M0,0 L100,0 L50,100 Z"}
+
+        center = get_element_center(element)
+
+        # Centroid = average of vertices
+        assert_that(center, equal_to((50.0, 100 / 3)))
+
+    def test_returns_centroid_for_closed_path_with_lowercase_z(self):
+        element = {"type": "path", "d": "M0,0 L100,0 L50,100 z"}
+
+        center = get_element_center(element)
+
+        assert_that(center, equal_to((50.0, 100 / 3)))
 
 
 class TestTwoPhaseResolution:
@@ -117,6 +169,52 @@ class TestTwoPhaseResolution:
         ]
 
         with pytest.raises(ValueError, match="Unknown element reference: unknown"):
+            resolve_positions(elements)
+
+    def test_connection_to_closed_path_uses_centroid(self):
+        from mcp_svg_animator.generators.position_resolver import resolve_positions
+
+        elements = [
+            {"type": "connection", "from": "circle1", "to": "triangle"},
+            {"id": "circle1", "type": "circle", "cx": 50, "cy": 50, "r": 25},
+            {
+                "id": "triangle",
+                "type": "path",
+                "segments": [
+                    {"type": "move_to", "x": 0, "y": 0},
+                    {"type": "line_to", "x": 100, "y": 0},
+                    {"type": "line_to", "x": 50, "y": 100},
+                    {"type": "close"},
+                ]
+            },
+        ]
+
+        resolved = resolve_positions(elements)
+
+        connection = resolved[0]
+        assert_that(connection["x1"], equal_to(50))  # circle center
+        assert_that(connection["y1"], equal_to(50))
+        # Triangle centroid: (0+100+50)/3, (0+0+100)/3
+        assert_that(connection["x2"], equal_to(50.0))
+        assert_that(connection["y2"], equal_to(100 / 3))
+
+    def test_connection_to_open_path_raises_error(self):
+        from mcp_svg_animator.generators.position_resolver import resolve_positions
+
+        elements = [
+            {"type": "connection", "from": "circle1", "to": "open_path"},
+            {"id": "circle1", "type": "circle", "cx": 50, "cy": 50, "r": 25},
+            {
+                "id": "open_path",
+                "type": "path",
+                "segments": [
+                    {"type": "move_to", "x": 0, "y": 0},
+                    {"type": "line_to", "x": 100, "y": 0},
+                ]
+            },
+        ]
+
+        with pytest.raises(ValueError, match="Cannot calculate center for open path"):
             resolve_positions(elements)
 
 

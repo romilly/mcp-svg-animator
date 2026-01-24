@@ -120,6 +120,9 @@ Connections draw lines between the centers of two referenced elements. Elements 
 - `circle`, `ellipse`: Uses cx, cy as center
 - `rectangle`: Uses x + width/2, y + height/2 as center
 - `text`: Uses x, y as center
+- `path` (closed only): Uses centroid of path vertices as center
+
+**Note:** Connections to open paths will raise an error. A path is closed if it ends with a `close` segment or if the raw `d` attribute ends with `Z` or `z`.
 
 Connections are rendered first (behind other elements) regardless of their position in the elements list.
 
