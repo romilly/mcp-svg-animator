@@ -109,3 +109,111 @@ elements:
 
 Ask Claude to save the SVG:
 > "Create a bouncing ball animation and save it to animation.svg"
+## Direct Python API
+
+You can also use the SVG generation functionality directly from Python code, without the MCP server.
+
+For the complete YAML schema reference, see [specification.md](specification.md).
+
+### Basic Usage
+
+```python
+from mcp_svg_animator import yaml_to_svg, yaml_to_svg_file
+
+# Generate SVG content from YAML string
+yaml_spec = '''
+width: 400
+height: 300
+elements:
+  - type: circle
+    cx: 200
+    cy: 150
+    r: 50
+    fill: blue
+'''
+svg_content = yaml_to_svg(yaml_spec)
+
+# Or save directly to file
+yaml_to_svg_file(yaml_spec, "output.svg")
+```
+
+### Load from YAML Files
+
+```python
+from mcp_svg_animator import yaml_file_to_svg, yaml_file_to_svg_file
+
+# Load YAML from file and get SVG content
+svg_content = yaml_file_to_svg("diagram.yaml")
+
+# Load YAML and save SVG directly
+yaml_file_to_svg_file("diagram.yaml", "output.svg")
+```
+
+### Build Specs Programmatically
+
+```python
+from mcp_svg_animator import dict_to_svg, dict_to_svg_file
+
+# Create from a Python dictionary
+spec = {
+    "width": 200,
+    "height": 200,
+    "elements": [
+        {"type": "circle", "cx": 100, "cy": 100, "r": 50, "fill": "green"}
+    ]
+}
+svg_content = dict_to_svg(spec)
+dict_to_svg_file(spec, "circle.svg")
+```
+
+### Generate PNG Images
+
+```python
+from mcp_svg_animator import yaml_to_png
+
+yaml_to_png('''
+width: 200
+height: 200
+elements:
+  - type: circle
+    cx: 100
+    cy: 100
+    r: 50
+    fill: red
+''', "circle.png")
+```
+
+### Generate Videos from Animations
+
+```python
+from mcp_svg_animator import yaml_to_video
+
+yaml_to_video('''
+width: 200
+height: 200
+elements:
+  - type: circle
+    cx: 100
+    cy: 100
+    r: 50
+    fill: red
+    animations:
+      - attribute: r
+        values: "50;30;50"
+        dur: 1s
+        repeatCount: indefinite
+''', "animation.webm", duration_ms=5000)
+```
+
+### Available Functions
+
+| Function | Description |
+|----------|-------------|
+| `yaml_to_svg(yaml_spec)` | Convert YAML string to SVG content |
+| `yaml_to_svg_file(yaml_spec, path)` | Convert YAML string and save to file |
+| `yaml_file_to_svg(yaml_path)` | Load YAML file and convert to SVG content |
+| `yaml_file_to_svg_file(yaml_path, svg_path)` | Load YAML file and save SVG to file |
+| `dict_to_svg(spec)` | Convert Python dict to SVG content |
+| `dict_to_svg_file(spec, path)` | Convert Python dict and save to file |
+| `yaml_to_png(yaml_spec, path)` | Convert YAML to PNG image |
+| `yaml_to_video(yaml_spec, path, duration_ms)` | Convert animated YAML to video |
